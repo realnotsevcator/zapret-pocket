@@ -87,7 +87,8 @@ if [ -d "$MODUPDATEPATH" ]; then
   mkdir -p "$MODUPDATEPATH/.old_files"
   cp -a "$MODPATH/"* "$MODUPDATEPATH/.old_files/" 2>/dev/null
   ui_print "- Updating module"
-  cp -f "$MODPATH/config" "$MODUPDATEPATH/config"
+  mkdir -p "$MODUPDATEPATH/config"
+  cp -af "$MODPATH/config/." "$MODUPDATEPATH/config/"
   cp -f "$MODPATH/dnscrypt/custom-cloaking-rules.txt" "$MODUPDATEPATH/dnscrypt/custom-cloaking-rules.txt"
   cp -f "$MODPATH/list/exclude.txt" "$MODUPDATEPATH/list/exclude.txt"
   cp -f "$MODPATH/ipset/exclude.txt" "$MODUPDATEPATH/ipset/exclude.txt"
