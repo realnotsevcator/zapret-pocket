@@ -53,6 +53,12 @@ blocked_names_file = 'blocked-names.txt'
 [blocked_ips]
 blocked_ips_file = 'blocked-ips.txt'
 
+[allowed_names]
+allowed_names_file = 'allowed-names.txt'
+
+[allowed_ips]
+allowed_ips_file = 'allowed-ips.txt'
+
 [broken_implementations]
 fragments_blocked = ['cisco', 'cisco-ipv6', 'cisco-familyshield', 'cisco-familyshield-ipv6', 'cisco-sandbox', 'cleanbrowsing-adult', 'cleanbrowsing-adult-ipv6', 'cleanbrowsing-family', 'cleanbrowsing-family-ipv6', 'cleanbrowsing-security', 'cleanbrowsing-security-ipv6']
 

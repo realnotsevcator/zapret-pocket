@@ -106,9 +106,13 @@ update_dir() {
     done
 }
 
+DNSCRYPT_CUSTOM_SCRIPTS="custom-cloaking-rules.sh custom-blocked-names.sh custom-blocked-ips.sh custom-allowed-names.sh custom-allowed-ips.sh"
+
 if [ "$IPV6ENABLE" != "1" ]; then
-    . "$MODPATH/dnscrypt/custom-cloaking-rules.sh" disappend > /dev/null 2>&1 &
-    sleep 2
+    for script in $DNSCRYPT_CUSTOM_SCRIPTS; do
+        [ -f "$MODPATH/dnscrypt/$script" ] || continue
+        sh "$MODPATH/dnscrypt/$script" disappend >/dev/null 2>&1 || true
+    done
 fi
 
 update_dir "$ZAPRETLISTSDIR" "$ZAPRETLISTSDEFAULTLINK" "$PREDEFINED_LIST_FILES"
@@ -118,6 +122,8 @@ update_dir "$ZAPRETIPSETSDIR" "$ZAPRETIPSETSDEFAULTLINK" "$PREDEFINED_IPSET_FILE
 [ "$IPV6ENABLE" != "1" ] && [ "$BLOCKEDUPDATE" = "1" ] && update_file "$DNSCRYPTLISTSDIR/blocked-names.txt" "$DNSCRYPTFILES_blocked_names"
 
 if [ "$IPV6ENABLE" != "1" ]; then
-    . "$MODPATH/dnscrypt/custom-cloaking-rules.sh" append > /dev/null 2>&1 &
-    sleep 2
+    for script in $DNSCRYPT_CUSTOM_SCRIPTS; do
+        [ -f "$MODPATH/dnscrypt/$script" ] || continue
+        sh "$MODPATH/dnscrypt/$script" append >/dev/null 2>&1 || true
+    done
 fi
