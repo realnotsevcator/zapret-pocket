@@ -2,10 +2,6 @@ MODPATH="/data/adb/modules/zapret"
 CURLPATH="$MODPATH/curl"
 CURRENTSTRATEGY=$(cat "$MODPATH/config/current-strategy" 2>/dev/null || echo "Unknown")
 DNSCRYPTENABLE=$(cat "$MODPATH/config/dnscrypt-enable" 2>/dev/null || echo "0")
-CLOAKINGUPDATE=$(cat "$MODPATH/config/dnscrypt-cloaking-rules-update" 2>/dev/null || echo "0")
-CLOAKINGRULESLINK=$(cat "$MODPATH/config/dnscrypt-cloaking-rules-link" 2>/dev/null || echo "https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/cloaking-rules.txt")
-BLOCKEDUPDATE=$(cat "$MODPATH/config/dnscrypt-blocked-names-update" 2>/dev/null || echo "0")
-BLOCKEDNAMESLINK=$(cat "$MODPATH/config/dnscrypt-blocked-names-link" 2>/dev/null || echo "https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/blocked-yandex.txt")
 UPDATEONSTART=$(cat "$MODPATH/config/update-on-start" 2>/dev/null || echo "1")
 CUSTOMLINKIPSETV4=$(cat "$MODPATH/config/ipset-v4-link" 2>/dev/null || echo "https://raw.githubusercontent.com/sevcator/zapret-lists/refs/heads/main/ipset-v4.txt")
 CUSTOMLINKIPSETV6=$(cat "$MODPATH/config/ipset-v6-link" 2>/dev/null || echo "https://raw.githubusercontent.com/sevcator/zapret-lists/refs/heads/main/ipset-v6.txt")
@@ -21,11 +17,6 @@ command_info() {
         echo "! Update on start enabled"
     else
         echo "! Update on start disabled"
-    fi
-    if [ "$CLOAKINGUPDATE" = "1" ]; then
-        echo "! DNSCrypt cloaking rules auto-update enabled"
-    else
-        echo "! DNSCrypt cloaking rules auto-update disabled"
     fi
     if [ "$IPV6ENABLE" = "1" ]; then
         echo "! IPv6 enabled"
@@ -190,50 +181,8 @@ setup() {
         esac
     fi
     
-    if [ "$IPV6ENABLE" != "1" ] && [ "$DNSCRYPTENABLE" = "1" ]; then
-        echo -n "- Auto-update cloaking rules for DNSCrypt? "
-        read resp
-        case "$(echo "$resp" | tr A-Z a-z)" in
-            y|yes) CLOAKINGUPDATE="1"; echo "- Enabled" ;;
-        esac
-
-        echo -n "- Auto-update blocked names for DNSCrypt? "
-        read resp
-        case "$(echo "$resp" | tr A-Z a-z)" in
-            y|yes) BLOCKEDUPDATE="1"; echo "- Enabled" ;;
-        esac
-
-        echo -n "- Do you want to change source links for update DNSCrypt files? "
-        read resp2
-        case "$(echo "$resp2" | tr A-Z a-z)" in
-            y|yes)
-                echo -n "- Enter link to cloaking-rules.txt (leave blank to keep current): "
-                read new_cloaking
-                if [ -n "$new_cloaking" ]; then
-                    CLOAKINGRULESLINK="$new_cloaking"
-                    echo "- Link updated"
-                else
-                    echo "- Keeping old link: $CLOAKINGRULESLINK"
-                fi
-
-                echo -n "- Enter link to blocking-names.txt (leave blank to keep current): "
-                read new_blocking
-                if [ -n "$new_blocking" ]; then
-                    BLOCKEDNAMESLINK="$new_blocking"
-                    echo "- Link updated"
-                else
-                    echo "- Keeping old link: $BLOCKEDNAMESLINK"
-                fi
-            ;;
-        esac
-    fi
-
     echo "$DNSCRYPTENABLE" > "$MODPATH/config/dnscrypt-enable"
     echo "$user_strategy" > "$MODPATH/config/current-strategy"
-    echo "$CLOAKINGUPDATE" > "$MODPATH/config/dnscrypt-cloaking-rules-update"
-    echo "$CLOAKINGRULESLINK" > "$MODPATH/config/dnscrypt-cloaking-rules-link"
-    echo "$BLOCKEDUPDATE" > "$MODPATH/config/dnscrypt-blocked-names-update"
-    echo "$BLOCKEDNAMESLINK" > "$MODPATH/config/dnscrypt-blocked-names-link"
     echo "$UPDATEONSTART" > "$MODPATH/config/update-on-start"
     echo "$CUSTOMLINKIPSETV4" > "$MODPATH/config/ipset-v4-link"
     echo "$CUSTOMLINKIPSETV6" > "$MODPATH/config/ipset-v6-link"

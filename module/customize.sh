@@ -89,15 +89,11 @@ if [ -d "$MODUPDATEPATH" ]; then
   ui_print "- Updating module"
   mkdir -p "$MODUPDATEPATH/config"
   cp -af "$MODPATH/config/." "$MODUPDATEPATH/config/"
-  for file in custom-cloaking-rules.txt 
-             custom-blocked-names.txt 
-             custom-blocked-ips.txt 
-             custom-allowed-names.txt 
-             custom-allowed-ips.txt 
-             blocked-names.txt 
-             blocked-ips.txt 
-             allowed-names.txt 
-             allowed-ips.txt
+  for file in custom-cloaking-rules.txt
+             custom-blocked-names.txt
+             custom-blocked-ips.txt
+             custom-allowed-names.txt
+             custom-allowed-ips.txt
   do
     if [ -f "$MODPATH/dnscrypt/$file" ]; then
       cp -f "$MODPATH/dnscrypt/$file" "$MODUPDATEPATH/dnscrypt/$file"

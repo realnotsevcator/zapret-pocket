@@ -1008,22 +1008,6 @@ body.light-theme #error-overlay {
 </span>
 </label>
 </div>
-<div class="setting-item dnscrypt-related dnscrypt-dependent">
-<label data-i18n="update_cloaking">Обновление Cloaking Rules</label>
-<label class="switch">
-<input id="toggle-cloaking-update" type="checkbox"/>
-<span class="slider">
-</span>
-</label>
-</div>
-<div class="setting-item dnscrypt-related dnscrypt-dependent">
-<label data-i18n="update_blocked_names">Обновление доменов для блокировки</label>
-<label class="switch">
-<input id="toggle-blocked-names-update" type="checkbox"/>
-<span class="slider">
-</span>
-</label>
-</div>
 </div>
 <h3 class="subsection-title" data-i18n="custom_links_title">Свои ссылки</h3>
 <div class="settings">
@@ -1038,14 +1022,6 @@ body.light-theme #error-overlay {
 <div class="setting-item stacked">
 <label data-i18n="registry_link">Ссылка на реестр</label>
 <input class="text-input" id="input-rkn-registry" placeholder="https://example.github.io/reestr.txt" type="text"/>
-</div>
-<div class="setting-item dnscrypt-related dnscrypt-dependent stacked">
-<label data-i18n="cloaking_rules_link">Ссылка на Cloaking Rules</label>
-<input class="text-input" id="input-cloaking-rules" placeholder="https://example.github.io/cloaking-rules.txt" type="text"/>
-</div>
-<div class="setting-item dnscrypt-related dnscrypt-dependent stacked">
-<label data-i18n="blocked_names_link">Ссылка на Blocked Names</label>
-<input class="text-input" id="input-blocked-names" placeholder="https://example.github.io/blocked-names.txt" type="text"/>
 </div>
 </div>
 <p class="note" data-i18n="note_restart">После изменения настроек не забудьте перезапустить службу.</p>
@@ -1184,16 +1160,12 @@ body.light-theme #error-overlay {
                 "dnscrypt_proxy": "DNSCrypt Proxy",
                 "dnscrypt_rules_refresh": "Обновление правил",
                 "update_on_start": "Обновление при запуске",
-                "update_cloaking": "Обновление Cloaking Rules",
-                "update_blocked_names": "Обновление Blocked Names",
                 "ipv6_enable": "Включить IPv6",
                 "network_tweaks": "Твики интернета",
                 "custom_links_title": "Пользовательские источники",
                 "ipv4_ranges_link": "Ссылка на IPv4 диапазоны",
                 "ipv6_ranges_link": "Ссылка на IPv6 диапазоны",
                 "registry_link": "Ссылка на реестр",
-                "cloaking_rules_link": "Ссылка на Cloaking Rules",
-                "blocked_names_link": "Ссылка на Blocked Names",
                 "note_restart": "После изменения настроек не забудьте перезапустить службу",
                 "interface_settings_title": "Интерфейс",
                 "dark_theme": "Темная тема",
@@ -1240,16 +1212,12 @@ body.light-theme #error-overlay {
                 "dnscrypt_proxy": "DNSCrypt Proxy",
                 "dnscrypt_rules_refresh": "Refresh rules",
                 "update_on_start": "Update on startup",
-                "update_cloaking": "Update Cloaking Rules",
-                "update_blocked_names": "Update Blocked Names",
                 "ipv6_enable": "Enable IPv6",
                 "network_tweaks": "Network Tweaks",
                 "custom_links_title": "Custom Links",
                 "ipv4_ranges_link": "IPv4 Ranges Link",
                 "ipv6_ranges_link": "IPv6 Ranges Link",
                 "registry_link": "Reestr Link",
-                "cloaking_rules_link": "Cloaking Rules Link",
-                "blocked_names_link": "Blocked Names Link",
                 "note_restart": "Restart the service after changing settings",
                 "interface_settings_title": "Interface",
                 "dark_theme": "Dark Theme",
@@ -1364,8 +1332,6 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                 const toggleDnscrypt = document.getElementById('toggle-dnscrypt');
                 const toggleRulesRecheck = document.getElementById('toggle-rules-recheck');
                 const toggleUpdateOnStart = document.getElementById('toggle-update-on-start');
-                const toggleCloakingUpdate = document.getElementById('toggle-cloaking-update');
-                const toggleBlockedNamesUpdate = document.getElementById('toggle-blocked-names-update');
                 const toggleIpv6 = document.getElementById('toggle-ipv6');
                 const logsContentzapret = document.getElementById('logs-content-zapret');
                 const logsContentDnscrypt = document.getElementById('logs-content-dnscrypt');
@@ -1383,8 +1349,6 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                 const inputIpv4Ranges = document.getElementById('input-ipv4-ranges');
                 const inputIpv6Ranges = document.getElementById('input-ipv6-ranges');
                 const inputRknRegistry = document.getElementById('input-rkn-registry');
-                const inputCloakingRules = document.getElementById('input-cloaking-rules');
-                const inputBlockedNames = document.getElementById('input-blocked-names');
                 let currentzapretLogText = '';
                 let currentDnscryptLogText = '';
                 const fileContents = {
@@ -1500,16 +1464,12 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                         const dnscryptEnabled = await run(`cat ${MODPATH}/config/dnscrypt-enable 2>/dev/null || true`);
                         const rulesRecheck = await run(`cat ${MODPATH}/config/dnscrypt-rules-fix 2>/dev/null || true`);
                         const updateOnStart = await run(`cat ${MODPATH}/config/update-on-start 2>/dev/null || true`);
-                        const cloakingUpdate = await run(`cat ${MODPATH}/config/dnscrypt-cloaking-rules-update 2>/dev/null || true`);
-                        const blockedNamesUpdate = await run(`cat ${MODPATH}/config/dnscrypt-blocked-names-update 2>/dev/null || true`);
                         const bypassCalls = await run(`cat ${MODPATH}/config/bypass-calls 2>/dev/null || true`);
                         const ipv6Enable = await run(`cat ${MODPATH}/config/ipv6-enable 2>/dev/null || true`);
                         const networkTweaks = await run(`cat ${MODPATH}/config/network-tweaks 2>/dev/null || true`);
                         const ipv4RangesLink = await run(`cat ${MODPATH}/config/ipset-v4-link 2>/dev/null || true`);
                         const ipv6RangesLink = await run(`cat ${MODPATH}/config/ipset-v6-link 2>/dev/null || true`);
                         const rknRegistryLink = await run(`cat ${MODPATH}/config/reestr-link 2>/dev/null || true`);
-                        const cloakingRulesLink = await run(`cat ${MODPATH}/config/dnscrypt-cloaking-rules-link 2>/dev/null || true`);
-                        const blockedNamesLink = await run(`cat ${MODPATH}/config/dnscrypt-blocked-names-link 2>/dev/null || true`);
                         const listCustom = await run(`cat ${MODPATH}/list/custom.txt 2>/dev/null || true`);
                         const listExclude = await run(`cat ${MODPATH}/list/exclude.txt 2>/dev/null || true`);
                         const ipsetCustom = await run(`cat ${MODPATH}/ipset/custom.txt 2>/dev/null || true`);
@@ -1552,15 +1512,11 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                         toggleDnscrypt.checked = isDnscryptChecked;
                         toggleRulesRecheck.checked = rulesRecheck === '1';
                         toggleUpdateOnStart.checked = updateOnStart === '1' || updateOnStart === '';
-                        toggleCloakingUpdate.checked = cloakingUpdate === '1';
-                        toggleBlockedNamesUpdate.checked = blockedNamesUpdate === '1';
                         document.getElementById('toggle-bypass-calls').checked = bypassCalls === '1';
                         document.getElementById('toggle-network-tweaks').checked = networkTweaks === '1';
                         inputIpv4Ranges.value = ipv4RangesLink;
                         inputIpv6Ranges.value = ipv6RangesLink;
                         inputRknRegistry.value = rknRegistryLink;
-                        inputCloakingRules.value = cloakingRulesLink;
-                        inputBlockedNames.value = blockedNamesLink;
                         updateDnscryptDependentFields(isDnscryptChecked, isIpv6Checked);
                         Object.keys(fileContents).forEach(path => {
                             if (!isDirty[path]) {
@@ -1684,8 +1640,6 @@ btnPrimary.addEventListener('click', async () => {
                 });
                 setupToggle(toggleRulesRecheck, 'dnscrypt-rules-fix');
                 setupToggle(toggleUpdateOnStart, 'update-on-start');
-                setupToggle(toggleCloakingUpdate, 'dnscrypt-cloaking-rules-update');
-                setupToggle(toggleBlockedNamesUpdate, 'dnscrypt-blocked-names-update');
                 setupToggle(document.getElementById('toggle-bypass-calls'), 'bypass-calls');
                 setupToggle(toggleIpv6, 'ipv6-enable', async () => {
                     const ipv6Enabled = toggleIpv6.checked;
@@ -1705,8 +1659,6 @@ btnPrimary.addEventListener('click', async () => {
                 setupCustomLinkInput(inputIpv4Ranges, 'custom-ipv4-ranges-url');
                 setupCustomLinkInput(inputIpv6Ranges, 'custom-ipv6-ranges-url');
                 setupCustomLinkInput(inputRknRegistry, 'custom-rkn-registry-url');
-                setupCustomLinkInput(inputCloakingRules, 'custom-cloaking-rules-url');
-                setupCustomLinkInput(inputBlockedNames, 'custom-blocked-names-url');
                 document.querySelectorAll('.btn-save').forEach(button => {
                     button.addEventListener('click', async () => {
                         const path = button.dataset.path;
