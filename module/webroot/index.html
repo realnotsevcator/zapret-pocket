@@ -1649,16 +1649,18 @@ btnPrimary.addEventListener('click', async () => {
                 const setupCustomLinkInput = (input, configName) => {
                     input.addEventListener('blur', async () => {
                         const value = input.value.trim();
+                        input.value = value;
                         if (value === '') {
                             await run(`rm -f ${MODPATH}/config/${configName}`);
-                        } else {
-                            await run(`echo '${value}' > ${MODPATH}/config/${configName}`);
+                            return;
                         }
+                        const escapedValue = value.replace(/'/g, "'\\''");
+                        await run(`echo '${escapedValue}' > ${MODPATH}/config/${configName}`);
                     });
                 };
-                setupCustomLinkInput(inputIpv4Ranges, 'custom-ipv4-ranges-url');
-                setupCustomLinkInput(inputIpv6Ranges, 'custom-ipv6-ranges-url');
-                setupCustomLinkInput(inputRknRegistry, 'custom-rkn-registry-url');
+                setupCustomLinkInput(inputIpv4Ranges, 'ipset-v4-link');
+                setupCustomLinkInput(inputIpv6Ranges, 'ipset-v6-link');
+                setupCustomLinkInput(inputRknRegistry, 'reestr-link');
                 document.querySelectorAll('.btn-save').forEach(button => {
                     button.addEventListener('click', async () => {
                         const path = button.dataset.path;
