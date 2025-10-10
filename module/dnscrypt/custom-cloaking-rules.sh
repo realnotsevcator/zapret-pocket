@@ -21,7 +21,6 @@ append() {
   ensure_newline "$CLOAKING_RULES"
 
   {
-    printf "\n"
     printf "# custom hosts\n"
     cat "$CUSTOM_RULES"
   } >> "$CLOAKING_RULES"

@@ -59,4 +59,12 @@ for ipt in iptables ip6tables; do
     fi
   done
 done
-. "$MODPATH/dnscrypt/custom-cloaking-rules.sh" disappend > /dev/null 2>&1
+for script in custom-cloaking-rules.sh
+             custom-blocked-names.sh
+             custom-blocked-ips.sh
+             custom-allowed-names.sh
+             custom-allowed-ips.sh
+do
+    [ -f "$MODPATH/dnscrypt/$script" ] || continue
+    sh "$MODPATH/dnscrypt/$script" disappend >/dev/null 2>&1 || true
+done

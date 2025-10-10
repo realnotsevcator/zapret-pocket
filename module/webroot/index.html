@@ -800,6 +800,10 @@ body.light-theme #error-overlay {
 <button class="list-btn" data-i18n="ipset_custom" data-tab="tab-ipset-custom">IPSet Custom</button>
 <button class="list-btn" data-i18n="ipset_exclude" data-tab="tab-ipset-exclude">IPSet Exclude</button>
 <button class="list-btn" data-i18n="dnscrypt_custom" data-tab="tab-dnscrypt-custom">DNSCrypt Custom</button>
+<button class="list-btn" data-i18n="dnscrypt_blocked_names" data-tab="tab-dnscrypt-blocked-names">DNSCrypt Blocked Names</button>
+<button class="list-btn" data-i18n="dnscrypt_blocked_ips" data-tab="tab-dnscrypt-blocked-ips">DNSCrypt Blocked IPs</button>
+<button class="list-btn" data-i18n="dnscrypt_allowed_names" data-tab="tab-dnscrypt-allowed-names">DNSCrypt Allowed Names</button>
+<button class="list-btn" data-i18n="dnscrypt_allowed_ips" data-tab="tab-dnscrypt-allowed-ips">DNSCrypt Allowed IPs</button>
 </div>
 <div class="tab-content-wrapper">
 <div class="tab-content active" id="tab-list-custom">
@@ -862,21 +866,81 @@ body.light-theme #error-overlay {
 <button class="btn btn-save" data-i18n="btn_save" data-path="ipset/exclude.txt">Сохранить</button>
 </div>
 </div>
-<div class="tab-content" id="tab-dnscrypt-custom">
-<textarea id="file-dnscrypt-custom" rows="10"></textarea>
-<div class="textarea-footer">
-<span class="line-counter" data-i18n-base="line_counter">
+        <div class="tab-content" id="tab-dnscrypt-custom">
+            <textarea id="file-dnscrypt-custom" rows="10"></textarea>
+            <div class="textarea-footer">
+                <span class="line-counter" data-i18n-base="line_counter">
           Строк: 0
-         </span>
-<button class="btn btn-icon btn-clear" data-i18n-title="btn_clear_title" data-target="file-dnscrypt-custom">
-<svg viewbox="0 0 24 24">
-<path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z">
-</path>
-</svg>
-</button>
-<button class="btn btn-save" data-i18n="btn_save" data-path="dnscrypt/custom-cloaking-rules.txt">Сохранить</button>
-</div>
-</div>
+                 </span>
+                <button class="btn btn-icon btn-clear" data-i18n-title="btn_clear_title" data-target="file-dnscrypt-custom">
+                    <svg viewbox="0 0 24 24">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z">
+                        </path>
+                    </svg>
+                </button>
+                <button class="btn btn-save" data-i18n="btn_save" data-path="dnscrypt/custom-cloaking-rules.txt">Сохранить</button>
+            </div>
+        </div>
+        <div class="tab-content" id="tab-dnscrypt-blocked-names">
+            <textarea id="file-dnscrypt-blocked-names" rows="10"></textarea>
+            <div class="textarea-footer">
+                <span class="line-counter" data-i18n-base="line_counter">
+          Строк: 0
+                </span>
+                <button class="btn btn-icon btn-clear" data-i18n-title="btn_clear_title" data-target="file-dnscrypt-blocked-names">
+                    <svg viewbox="0 0 24 24">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z">
+                        </path>
+                    </svg>
+                </button>
+                <button class="btn btn-save" data-i18n="btn_save" data-path="dnscrypt/custom-blocked-names.txt">Сохранить</button>
+            </div>
+        </div>
+        <div class="tab-content" id="tab-dnscrypt-blocked-ips">
+            <textarea id="file-dnscrypt-blocked-ips" rows="10"></textarea>
+            <div class="textarea-footer">
+                <span class="line-counter" data-i18n-base="line_counter">
+          Строк: 0
+                </span>
+                <button class="btn btn-icon btn-clear" data-i18n-title="btn_clear_title" data-target="file-dnscrypt-blocked-ips">
+                    <svg viewbox="0 0 24 24">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z">
+                        </path>
+                    </svg>
+                </button>
+                <button class="btn btn-save" data-i18n="btn_save" data-path="dnscrypt/custom-blocked-ips.txt">Сохранить</button>
+            </div>
+        </div>
+        <div class="tab-content" id="tab-dnscrypt-allowed-names">
+            <textarea id="file-dnscrypt-allowed-names" rows="10"></textarea>
+            <div class="textarea-footer">
+                <span class="line-counter" data-i18n-base="line_counter">
+          Строк: 0
+                </span>
+                <button class="btn btn-icon btn-clear" data-i18n-title="btn_clear_title" data-target="file-dnscrypt-allowed-names">
+                    <svg viewbox="0 0 24 24">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z">
+                        </path>
+                    </svg>
+                </button>
+                <button class="btn btn-save" data-i18n="btn_save" data-path="dnscrypt/custom-allowed-names.txt">Сохранить</button>
+            </div>
+        </div>
+        <div class="tab-content" id="tab-dnscrypt-allowed-ips">
+            <textarea id="file-dnscrypt-allowed-ips" rows="10"></textarea>
+            <div class="textarea-footer">
+                <span class="line-counter" data-i18n-base="line_counter">
+          Строк: 0
+                </span>
+                <button class="btn btn-icon btn-clear" data-i18n-title="btn_clear_title" data-target="file-dnscrypt-allowed-ips">
+                    <svg viewbox="0 0 24 24">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z">
+                        </path>
+                    </svg>
+                </button>
+                <button class="btn btn-save" data-i18n="btn_save" data-path="dnscrypt/custom-allowed-ips.txt">Сохранить</button>
+            </div>
+        </div>
 </div>
 </div>
 </main>
@@ -944,22 +1008,6 @@ body.light-theme #error-overlay {
 </span>
 </label>
 </div>
-<div class="setting-item dnscrypt-related dnscrypt-dependent">
-<label data-i18n="update_cloaking">Обновление Cloaking Rules</label>
-<label class="switch">
-<input id="toggle-cloaking-update" type="checkbox"/>
-<span class="slider">
-</span>
-</label>
-</div>
-<div class="setting-item dnscrypt-related dnscrypt-dependent">
-<label data-i18n="update_blocked_names">Обновление доменов для блокировки</label>
-<label class="switch">
-<input id="toggle-blocked-names-update" type="checkbox"/>
-<span class="slider">
-</span>
-</label>
-</div>
 </div>
 <h3 class="subsection-title" data-i18n="custom_links_title">Свои ссылки</h3>
 <div class="settings">
@@ -974,14 +1022,6 @@ body.light-theme #error-overlay {
 <div class="setting-item stacked">
 <label data-i18n="registry_link">Ссылка на реестр</label>
 <input class="text-input" id="input-rkn-registry" placeholder="https://example.github.io/reestr.txt" type="text"/>
-</div>
-<div class="setting-item dnscrypt-related dnscrypt-dependent stacked">
-<label data-i18n="cloaking_rules_link">Ссылка на Cloaking Rules</label>
-<input class="text-input" id="input-cloaking-rules" placeholder="https://example.github.io/cloaking-rules.txt" type="text"/>
-</div>
-<div class="setting-item dnscrypt-related dnscrypt-dependent stacked">
-<label data-i18n="blocked_names_link">Ссылка на Blocked Names</label>
-<input class="text-input" id="input-blocked-names" placeholder="https://example.github.io/blocked-names.txt" type="text"/>
 </div>
 </div>
 <p class="note" data-i18n="note_restart">После изменения настроек не забудьте перезапустить службу.</p>
@@ -1102,6 +1142,10 @@ body.light-theme #error-overlay {
                 "ipset_custom": "IPSet Custom",
                 "ipset_exclude": "IPSet Exclude",
                 "dnscrypt_custom": "Пользовательский cloaking-rules.txt",
+                "dnscrypt_blocked_names": "Пользовательский blocked-names.txt",
+                "dnscrypt_blocked_ips": "Пользовательский blocked-ips.txt",
+                "dnscrypt_allowed_names": "Пользовательский allowed-names.txt",
+                "dnscrypt_allowed_ips": "Пользовательский allowed-ips.txt",
                 "line_counter": "Строк: {count}",
                 "btn_clear_title": "Очистить список",
                 "btn_save": "Сохранить",
@@ -1116,16 +1160,12 @@ body.light-theme #error-overlay {
                 "dnscrypt_proxy": "DNSCrypt Proxy",
                 "dnscrypt_rules_refresh": "Обновление правил",
                 "update_on_start": "Обновление при запуске",
-                "update_cloaking": "Обновление Cloaking Rules",
-                "update_blocked_names": "Обновление Blocked Names",
                 "ipv6_enable": "Включить IPv6",
                 "network_tweaks": "Твики интернета",
                 "custom_links_title": "Пользовательские источники",
                 "ipv4_ranges_link": "Ссылка на IPv4 диапазоны",
                 "ipv6_ranges_link": "Ссылка на IPv6 диапазоны",
                 "registry_link": "Ссылка на реестр",
-                "cloaking_rules_link": "Ссылка на Cloaking Rules",
-                "blocked_names_link": "Ссылка на Blocked Names",
                 "note_restart": "После изменения настроек не забудьте перезапустить службу",
                 "interface_settings_title": "Интерфейс",
                 "dark_theme": "Темная тема",
@@ -1154,6 +1194,10 @@ body.light-theme #error-overlay {
                 "ipset_custom": "IPSet Custom",
                 "ipset_exclude": "IPSet Exclude",
                 "dnscrypt_custom": "Custom cloaking-rules.txt",
+                "dnscrypt_blocked_names": "Custom blocked-names.txt",
+                "dnscrypt_blocked_ips": "Custom blocked-ips.txt",
+                "dnscrypt_allowed_names": "Custom allowed-names.txt",
+                "dnscrypt_allowed_ips": "Custom allowed-ips.txt",
                 "line_counter": "Lines: {count}",
                 "btn_clear_title": "Clear list",
                 "btn_save": "Save",
@@ -1168,16 +1212,12 @@ body.light-theme #error-overlay {
                 "dnscrypt_proxy": "DNSCrypt Proxy",
                 "dnscrypt_rules_refresh": "Refresh rules",
                 "update_on_start": "Update on startup",
-                "update_cloaking": "Update Cloaking Rules",
-                "update_blocked_names": "Update Blocked Names",
                 "ipv6_enable": "Enable IPv6",
                 "network_tweaks": "Network Tweaks",
                 "custom_links_title": "Custom Links",
                 "ipv4_ranges_link": "IPv4 Ranges Link",
                 "ipv6_ranges_link": "IPv6 Ranges Link",
                 "registry_link": "Reestr Link",
-                "cloaking_rules_link": "Cloaking Rules Link",
-                "blocked_names_link": "Blocked Names Link",
                 "note_restart": "Restart the service after changing settings",
                 "interface_settings_title": "Interface",
                 "dark_theme": "Dark Theme",
@@ -1292,8 +1332,6 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                 const toggleDnscrypt = document.getElementById('toggle-dnscrypt');
                 const toggleRulesRecheck = document.getElementById('toggle-rules-recheck');
                 const toggleUpdateOnStart = document.getElementById('toggle-update-on-start');
-                const toggleCloakingUpdate = document.getElementById('toggle-cloaking-update');
-                const toggleBlockedNamesUpdate = document.getElementById('toggle-blocked-names-update');
                 const toggleIpv6 = document.getElementById('toggle-ipv6');
                 const logsContentzapret = document.getElementById('logs-content-zapret');
                 const logsContentDnscrypt = document.getElementById('logs-content-dnscrypt');
@@ -1311,8 +1349,6 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                 const inputIpv4Ranges = document.getElementById('input-ipv4-ranges');
                 const inputIpv6Ranges = document.getElementById('input-ipv6-ranges');
                 const inputRknRegistry = document.getElementById('input-rkn-registry');
-                const inputCloakingRules = document.getElementById('input-cloaking-rules');
-                const inputBlockedNames = document.getElementById('input-blocked-names');
                 let currentzapretLogText = '';
                 let currentDnscryptLogText = '';
                 const fileContents = {
@@ -1320,12 +1356,23 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                     'list/exclude.txt': document.getElementById('file-list-exclude'),
                     'ipset/custom.txt': document.getElementById('file-ipset-custom'),
                     'ipset/exclude.txt': document.getElementById('file-ipset-exclude'),
-                    'dnscrypt/custom-cloaking-rules.txt': document.getElementById('file-dnscrypt-custom')
+                    'dnscrypt/custom-cloaking-rules.txt': document.getElementById('file-dnscrypt-custom'),
+                    'dnscrypt/custom-blocked-names.txt': document.getElementById('file-dnscrypt-blocked-names'),
+                    'dnscrypt/custom-blocked-ips.txt': document.getElementById('file-dnscrypt-blocked-ips'),
+                    'dnscrypt/custom-allowed-names.txt': document.getElementById('file-dnscrypt-allowed-names'),
+                    'dnscrypt/custom-allowed-ips.txt': document.getElementById('file-dnscrypt-allowed-ips')
                 };
                 const isDirty = {};
                 Object.keys(fileContents).forEach(path => {
                     isDirty[path] = false;
                 });
+                const dnscryptCustomScriptsMap = {
+                    'dnscrypt/custom-cloaking-rules.txt': 'custom-cloaking-rules.sh',
+                    'dnscrypt/custom-blocked-names.txt': 'custom-blocked-names.sh',
+                    'dnscrypt/custom-blocked-ips.txt': 'custom-blocked-ips.sh',
+                    'dnscrypt/custom-allowed-names.txt': 'custom-allowed-names.sh',
+                    'dnscrypt/custom-allowed-ips.txt': 'custom-allowed-ips.sh'
+                };
                 const updateStatusIndicator = (element, status) => {
                     const textEl = element.querySelector('.text');
                     if (status === 'Running') {
@@ -1417,21 +1464,21 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                         const dnscryptEnabled = await run(`cat ${MODPATH}/config/dnscrypt-enable 2>/dev/null || true`);
                         const rulesRecheck = await run(`cat ${MODPATH}/config/dnscrypt-rules-fix 2>/dev/null || true`);
                         const updateOnStart = await run(`cat ${MODPATH}/config/update-on-start 2>/dev/null || true`);
-                        const cloakingUpdate = await run(`cat ${MODPATH}/config/dnscrypt-cloaking-rules-update 2>/dev/null || true`);
-                        const blockedNamesUpdate = await run(`cat ${MODPATH}/config/dnscrypt-blocked-names-update 2>/dev/null || true`);
                         const bypassCalls = await run(`cat ${MODPATH}/config/bypass-calls 2>/dev/null || true`);
                         const ipv6Enable = await run(`cat ${MODPATH}/config/ipv6-enable 2>/dev/null || true`);
                         const networkTweaks = await run(`cat ${MODPATH}/config/network-tweaks 2>/dev/null || true`);
                         const ipv4RangesLink = await run(`cat ${MODPATH}/config/ipset-v4-link 2>/dev/null || true`);
                         const ipv6RangesLink = await run(`cat ${MODPATH}/config/ipset-v6-link 2>/dev/null || true`);
                         const rknRegistryLink = await run(`cat ${MODPATH}/config/reestr-link 2>/dev/null || true`);
-                        const cloakingRulesLink = await run(`cat ${MODPATH}/config/dnscrypt-cloaking-rules-link 2>/dev/null || true`);
-                        const blockedNamesLink = await run(`cat ${MODPATH}/config/dnscrypt-blocked-names-link 2>/dev/null || true`);
                         const listCustom = await run(`cat ${MODPATH}/list/custom.txt 2>/dev/null || true`);
                         const listExclude = await run(`cat ${MODPATH}/list/exclude.txt 2>/dev/null || true`);
                         const ipsetCustom = await run(`cat ${MODPATH}/ipset/custom.txt 2>/dev/null || true`);
                         const ipsetExclude = await run(`cat ${MODPATH}/ipset/exclude.txt 2>/dev/null || true`);
                         const dnscryptCustom = await run(`cat ${MODPATH}/dnscrypt/custom-cloaking-rules.txt 2>/dev/null || true`);
+                        const dnscryptCustomBlockedNames = await run(`cat ${MODPATH}/dnscrypt/custom-blocked-names.txt 2>/dev/null || true`);
+                        const dnscryptCustomBlockedIps = await run(`cat ${MODPATH}/dnscrypt/custom-blocked-ips.txt 2>/dev/null || true`);
+                        const dnscryptCustomAllowedNames = await run(`cat ${MODPATH}/dnscrypt/custom-allowed-names.txt 2>/dev/null || true`);
+                        const dnscryptCustomAllowedIps = await run(`cat ${MODPATH}/dnscrypt/custom-allowed-ips.txt 2>/dev/null || true`);
                         const zapretLogs = await run(`cat ${MODPATH}/zapret/latest.log 2>/dev/null || true`);
                         const dnscryptLogs = await run(`cat ${MODPATH}/dnscrypt/latest.log 2>/dev/null || true`);
                         currentzapretLogText = zapretLogs;
@@ -1465,15 +1512,11 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                         toggleDnscrypt.checked = isDnscryptChecked;
                         toggleRulesRecheck.checked = rulesRecheck === '1';
                         toggleUpdateOnStart.checked = updateOnStart === '1' || updateOnStart === '';
-                        toggleCloakingUpdate.checked = cloakingUpdate === '1';
-                        toggleBlockedNamesUpdate.checked = blockedNamesUpdate === '1';
                         document.getElementById('toggle-bypass-calls').checked = bypassCalls === '1';
                         document.getElementById('toggle-network-tweaks').checked = networkTweaks === '1';
                         inputIpv4Ranges.value = ipv4RangesLink;
                         inputIpv6Ranges.value = ipv6RangesLink;
                         inputRknRegistry.value = rknRegistryLink;
-                        inputCloakingRules.value = cloakingRulesLink;
-                        inputBlockedNames.value = blockedNamesLink;
                         updateDnscryptDependentFields(isDnscryptChecked, isIpv6Checked);
                         Object.keys(fileContents).forEach(path => {
                             if (!isDirty[path]) {
@@ -1485,6 +1528,10 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                                     case 'ipset/custom.txt': content = ipsetCustom; break;
                                     case 'ipset/exclude.txt': content = ipsetExclude; break;
                                     case 'dnscrypt/custom-cloaking-rules.txt': content = dnscryptCustom; break;
+                                    case 'dnscrypt/custom-blocked-names.txt': content = dnscryptCustomBlockedNames; break;
+                                    case 'dnscrypt/custom-blocked-ips.txt': content = dnscryptCustomBlockedIps; break;
+                                    case 'dnscrypt/custom-allowed-names.txt': content = dnscryptCustomAllowedNames; break;
+                                    case 'dnscrypt/custom-allowed-ips.txt': content = dnscryptCustomAllowedIps; break;
                                 }
                                 textarea.value = content;
                             }
@@ -1593,8 +1640,6 @@ btnPrimary.addEventListener('click', async () => {
                 });
                 setupToggle(toggleRulesRecheck, 'dnscrypt-rules-fix');
                 setupToggle(toggleUpdateOnStart, 'update-on-start');
-                setupToggle(toggleCloakingUpdate, 'dnscrypt-cloaking-rules-update');
-                setupToggle(toggleBlockedNamesUpdate, 'dnscrypt-blocked-names-update');
                 setupToggle(document.getElementById('toggle-bypass-calls'), 'bypass-calls');
                 setupToggle(toggleIpv6, 'ipv6-enable', async () => {
                     const ipv6Enabled = toggleIpv6.checked;
@@ -1604,23 +1649,28 @@ btnPrimary.addEventListener('click', async () => {
                 const setupCustomLinkInput = (input, configName) => {
                     input.addEventListener('blur', async () => {
                         const value = input.value.trim();
+                        input.value = value;
                         if (value === '') {
                             await run(`rm -f ${MODPATH}/config/${configName}`);
-                        } else {
-                            await run(`echo '${value}' > ${MODPATH}/config/${configName}`);
+                            return;
                         }
+                        const escapedValue = value.replace(/'/g, "'\\''");
+                        await run(`echo '${escapedValue}' > ${MODPATH}/config/${configName}`);
                     });
                 };
-                setupCustomLinkInput(inputIpv4Ranges, 'custom-ipv4-ranges-url');
-                setupCustomLinkInput(inputIpv6Ranges, 'custom-ipv6-ranges-url');
-                setupCustomLinkInput(inputRknRegistry, 'custom-rkn-registry-url');
-                setupCustomLinkInput(inputCloakingRules, 'custom-cloaking-rules-url');
-                setupCustomLinkInput(inputBlockedNames, 'custom-blocked-names-url');
+                setupCustomLinkInput(inputIpv4Ranges, 'ipset-v4-link');
+                setupCustomLinkInput(inputIpv6Ranges, 'ipset-v6-link');
+                setupCustomLinkInput(inputRknRegistry, 'reestr-link');
                 document.querySelectorAll('.btn-save').forEach(button => {
                     button.addEventListener('click', async () => {
                         const path = button.dataset.path;
                         const content = fileContents[path].value.replace(/'/g, "'\\''");
                         await run(`echo '${content}' > ${MODPATH}/${path}`);
+                        const scriptName = dnscryptCustomScriptsMap[path];
+                        if (scriptName) {
+                            await run(`sh ${MODPATH}/dnscrypt/${scriptName} disappend >/dev/null 2>&1 || true`);
+                            await run(`sh ${MODPATH}/dnscrypt/${scriptName} append >/dev/null 2>&1 || true`);
+                        }
                         isDirty[path] = false;
                     });
                 });
