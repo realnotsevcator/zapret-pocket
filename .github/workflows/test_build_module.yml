@@ -1,4 +1,4 @@
-name: Build Zapret Pocket
+name: TEST Build Zapret Pocket
 run-name: ${{ echo "1000" }}
 
 on:
