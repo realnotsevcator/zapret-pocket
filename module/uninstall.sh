@@ -7,8 +7,7 @@ PIDS_FROM_DIR="$(pgrep -f "$MODPATH" 2>/dev/null || true)"
 for pid in $PIDS_FROM_DIR; do
     [ "$pid" = "$SELF" ] && continue
     [ "$pid" = "$PARENT" ] && continue
-    if [ -r "/proc/$pid/cmdline" ] && \
-       tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null | grep -qF "$SCRIPT_PATH"; then
+    if [ -r "/proc/$pid/cmdline" ] && tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null | grep -qF "$SCRIPT_PATH"; then
         continue
     fi
     if [ -d "/proc/$pid" ]; then
@@ -59,12 +58,7 @@ for ipt in iptables ip6tables; do
     fi
   done
 done
-for script in custom-cloaking-rules.sh
-             custom-blocked-names.sh
-             custom-blocked-ips.sh
-             custom-allowed-names.sh
-             custom-allowed-ips.sh
-do
+for script in custom-cloaking-rules.sh custom-blocked-names.sh custom-blocked-ips.sh custom-allowed-names.sh custom-allowed-ips.sh; do
     [ -f "$MODPATH/dnscrypt/$script" ] || continue
     sh "$MODPATH/dnscrypt/$script" disappend >/dev/null 2>&1 || true
 done

@@ -90,12 +90,7 @@ if [ -d "$MODUPDATEPATH" ]; then
   mkdir -p "$MODUPDATEPATH/config"
   cp -af "$MODPATH/config/." "$MODUPDATEPATH/config/"
   mkdir -p "$MODUPDATEPATH/dnscrypt"
-  for file in custom-cloaking-rules.txt
-             custom-blocked-names.txt
-             custom-blocked-ips.txt
-             custom-allowed-names.txt
-             custom-allowed-ips.txt
-  do
+  for file in custom-cloaking-rules.txt custom-blocked-names.txt custom-blocked-ips.txt custom-allowed-names.txt custom-allowed-ips.txt; do
     if [ -f "$MODPATH/dnscrypt/$file" ]; then
       cp -f "$MODPATH/dnscrypt/$file" "$MODUPDATEPATH/dnscrypt/$file"
     fi
