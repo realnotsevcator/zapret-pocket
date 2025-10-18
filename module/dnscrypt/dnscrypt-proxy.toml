@@ -47,6 +47,12 @@ cache_neg_max_ttl = 180
 
 cloaking_rules = 'cloaking-rules.txt'
 
+[allowed_names]
+allowed_names_file = 'allowed-names.txt'
+
+[allowed_ips]
+allowed_ips_file = 'allowed-ips.txt'
+
 [blocked_names]
 blocked_names_file = 'blocked-names.txt'
 

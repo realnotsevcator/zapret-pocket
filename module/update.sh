@@ -108,6 +108,7 @@ update_dir() {
 
 if [ "$IPV6ENABLE" != "1" ]; then
     . "$MODPATH/dnscrypt/custom-cloaking-rules.sh" disappend > /dev/null 2>&1 &
+    . "$MODPATH/dnscrypt/custom-blocklists.sh" disappend > /dev/null 2>&1 &
     sleep 2
 fi
 
@@ -119,5 +120,6 @@ update_dir "$ZAPRETIPSETSDIR" "$ZAPRETIPSETSDEFAULTLINK" "$PREDEFINED_IPSET_FILE
 
 if [ "$IPV6ENABLE" != "1" ]; then
     . "$MODPATH/dnscrypt/custom-cloaking-rules.sh" append > /dev/null 2>&1 &
+    . "$MODPATH/dnscrypt/custom-blocklists.sh" append > /dev/null 2>&1 &
     sleep 2
 fi

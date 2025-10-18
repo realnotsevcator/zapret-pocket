@@ -57,3 +57,4 @@ for chain in PREROUTING POSTROUTING; do
   remove_rules_by_pattern ip6tables mangle "$chain" "NFQUEUE --queue-num 200 --queue-bypass"
 done
 . "$MODPATH/dnscrypt/custom-cloaking-rules.sh" disappend > /dev/null 2>&1
+. "$MODPATH/dnscrypt/custom-blocklists.sh" disappend > /dev/null 2>&1
