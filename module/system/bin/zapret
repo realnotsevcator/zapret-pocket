@@ -1,15 +1,29 @@
 MODPATH="/data/adb/modules/zapret"
 CURLPATH="$MODPATH/curl"
+
+read_link_config() {
+    default_value="$1"
+    shift
+    for name in "$@"; do
+        file="$MODPATH/config/$name"
+        if [ -f "$file" ]; then
+            cat "$file"
+            return
+        fi
+    done
+    printf '%s\n' "$default_value"
+}
+
 CURRENTSTRATEGY=$(cat "$MODPATH/config/current-strategy" 2>/dev/null || echo "Unknown")
 DNSCRYPTENABLE=$(cat "$MODPATH/config/dnscrypt-enable" 2>/dev/null || echo "0")
 CLOAKINGUPDATE=$(cat "$MODPATH/config/dnscrypt-cloaking-rules-update" 2>/dev/null || echo "0")
-CLOAKINGRULESLINK=$(cat "$MODPATH/config/dnscrypt-cloaking-rules-link" 2>/dev/null || echo "https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/cloaking-rules.txt")
+CLOAKINGRULESLINK=$(read_link_config "https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/cloaking-rules.txt" dnscrypt-cloaking-rules-link custom-cloaking-rules-url)
 BLOCKEDUPDATE=$(cat "$MODPATH/config/dnscrypt-blocked-names-update" 2>/dev/null || echo "0")
-BLOCKEDNAMESLINK=$(cat "$MODPATH/config/dnscrypt-blocked-names-link" 2>/dev/null || echo "https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/blocked-yandex.txt")
+BLOCKEDNAMESLINK=$(read_link_config "https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/blocked-yandex.txt" dnscrypt-blocked-names-link custom-blocked-names-url)
 UPDATEONSTART=$(cat "$MODPATH/config/update-on-start" 2>/dev/null || echo "1")
-CUSTOMLINKIPSETV4=$(cat "$MODPATH/config/ipset-v4-link" 2>/dev/null || echo "https://raw.githubusercontent.com/sevcator/zapret-lists/refs/heads/main/ipset-v4.txt")
-CUSTOMLINKIPSETV6=$(cat "$MODPATH/config/ipset-v6-link" 2>/dev/null || echo "https://raw.githubusercontent.com/sevcator/zapret-lists/refs/heads/main/ipset-v6.txt")
-CUSTOMLINKREESTR=$(cat "$MODPATH/config/reestr-link" 2>/dev/null || echo "https://raw.githubusercontent.com/sevcator/zapret-lists/refs/heads/main/reestr_filtered.txt")
+CUSTOMLINKIPSETV4=$(read_link_config "https://raw.githubusercontent.com/sevcator/zapret-lists/refs/heads/main/ipset-v4.txt" ipset-v4-link custom-ipv4-ranges-url)
+CUSTOMLINKIPSETV6=$(read_link_config "https://raw.githubusercontent.com/sevcator/zapret-lists/refs/heads/main/ipset-v6.txt" ipset-v6-link custom-ipv6-ranges-url)
+CUSTOMLINKREESTR=$(read_link_config "https://raw.githubusercontent.com/sevcator/zapret-lists/refs/heads/main/reestr_filtered.txt" reestr-link custom-rkn-registry-url)
 IPV6ENABLE=$(cat "$MODPATH/config/ipv6-enable" 2>/dev/null || echo "0")
 NETWORKTWEAKS=$(cat "$MODPATH/config/network-tweaks" 2>/dev/null || echo "0")
 BYPASSCALLS=$(cat "$MODPATH/config/bypass-calls" 2>/dev/null || echo "0")
@@ -203,6 +217,7 @@ setup() {
         read resp2
         case "$(echo "$resp2" | tr A-Z a-z)" in
             y|yes)
+                echo "! Supported filenames: cloaking-rules.txt, forwarding-rules.txt, blocked-ips.txt, allowed-names.txt, allowed-ips.txt"
                 echo -n "- Enter link to cloaking-rules.txt (leave blank to keep current): "
                 read new_cloaking
                 if [ -n "$new_cloaking" ]; then
@@ -212,7 +227,7 @@ setup() {
                     echo "- Keeping old link: $CLOAKINGRULESLINK"
                 fi
 
-                echo -n "- Enter link to blocking-names.txt (leave blank to keep current): "
+                echo -n "- Enter link to blocked-names.txt (leave blank to keep current): "
                 read new_blocking
                 if [ -n "$new_blocking" ]; then
                     BLOCKEDNAMESLINK="$new_blocking"
@@ -228,12 +243,17 @@ setup() {
     echo "$user_strategy" > "$MODPATH/config/current-strategy"
     echo "$CLOAKINGUPDATE" > "$MODPATH/config/dnscrypt-cloaking-rules-update"
     echo "$CLOAKINGRULESLINK" > "$MODPATH/config/dnscrypt-cloaking-rules-link"
+    rm -f "$MODPATH/config/custom-cloaking-rules-url"
     echo "$BLOCKEDUPDATE" > "$MODPATH/config/dnscrypt-blocked-names-update"
     echo "$BLOCKEDNAMESLINK" > "$MODPATH/config/dnscrypt-blocked-names-link"
+    rm -f "$MODPATH/config/custom-blocked-names-url"
     echo "$UPDATEONSTART" > "$MODPATH/config/update-on-start"
     echo "$CUSTOMLINKIPSETV4" > "$MODPATH/config/ipset-v4-link"
+    rm -f "$MODPATH/config/custom-ipv4-ranges-url"
     echo "$CUSTOMLINKIPSETV6" > "$MODPATH/config/ipset-v6-link"
+    rm -f "$MODPATH/config/custom-ipv6-ranges-url"
     echo "$CUSTOMLINKREESTR" > "$MODPATH/config/reestr-link"
+    rm -f "$MODPATH/config/custom-rkn-registry-url"
     echo "$IPV6ENABLE" > "$MODPATH/config/ipv6-enable"
     echo "$NETWORKTWEAKS" > "$MODPATH/config/network-tweaks"
     echo "$BYPASSCALLS" > "$MODPATH/config/bypass-calls"
