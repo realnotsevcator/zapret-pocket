@@ -4,6 +4,10 @@ UPDATEONSTART=$(cat "$MODPATH/config/update-on-start" 2>/dev/null || echo "1")
 IPV6ENABLE=$(cat "$MODPATH/config/ipv6-enable" 2>/dev/null || echo "0")
 touch "$MODPATH/dnscrypt/cloaking-rules.txt"
 touch "$MODPATH/dnscrypt/custom-cloaking-rules.txt"
+touch "$MODPATH/dnscrypt/custom-allowed-ips.txt"
+touch "$MODPATH/dnscrypt/custom-blocked-ips.txt"
+touch "$MODPATH/dnscrypt/custom-blocked-names.txt"
+touch "$MODPATH/dnscrypt/custom-allowed-names.txt"
 touch "$MODPATH/dnscrypt/blocked-names.txt"
 touch "$MODPATH/dnscrypt/blocked-ips.txt"
 touch "$MODPATH/ipset/custom.txt"

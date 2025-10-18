@@ -4,6 +4,18 @@ SELF="$$"
 PARENT="$PPID"
 SCRIPT_PATH="$(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null || echo "$0")"
 PIDS_FROM_DIR="$(pgrep -f "$MODPATH" 2>/dev/null || true)"
+remove_rules_by_pattern() {
+    local cmd="$1"
+    local table="$2"
+    local chain="$3"
+    local pattern="$4"
+    while true; do
+        local rule=$($cmd -t "$table" -S "$chain" 2>/dev/null | grep -F "$pattern" | head -n1)
+        [ -z "$rule" ] && break
+        local spec=${rule#-A $chain }
+        $cmd -t "$table" -D "$chain" $spec 2>/dev/null || break
+    done
+}
 for pid in $PIDS_FROM_DIR; do
     [ "$pid" = "$SELF" ] && continue
     [ "$pid" = "$PARENT" ] && continue
@@ -33,30 +45,15 @@ sysctl net.netfilter.nf_conntrack_tcp_be_liberal=0 > /dev/null 2>&1 &
 sysctl net.netfilter.nf_conntrack_checksum=1 > /dev/null 2>&1 &
 echo 0 > /proc/sys/net/ipv4/conf/all/route_localnet
 for chain in PREROUTING OUTPUT FORWARD; do
-  for proto in udp tcp; do
-    if iptables -t nat -C $chain -p $proto --dport 53 -j DNAT --to-destination 127.0.0.1:5253 2>/dev/null; then
-      iptables -t nat -D $chain -p $proto --dport 53 -j DNAT --to-destination 127.0.0.1:5253
-    fi
-    if ip6tables -t nat -C $chain -p $proto --dport 53 -j REDIRECT --to-ports 5253 2>/dev/null; then
-      ip6tables -t nat -D $chain -p $proto --dport 53 -j REDIRECT --to-ports 5253
-    fi
-  done
+  remove_rules_by_pattern iptables nat "$chain" "--dport 53 -j DNAT --to-destination 127.0.0.1:5253"
+  remove_rules_by_pattern ip6tables nat "$chain" "--dport 53 -j REDIRECT --to-ports 5253"
 done
 for chain in OUTPUT FORWARD; do
-  for proto in udp tcp; do
-    if iptables -t filter -C $chain -p $proto --dport 853 -j DROP 2>/dev/null; then
-      iptables -t filter -D $chain -p $proto --dport 853 -j DROP
-    fi
-    if ip6tables -t filter -C $chain -p $proto --dport 853 -j DROP 2>/dev/null; then
-      ip6tables -t filter -D $chain -p $proto --dport 853 -j DROP
-    fi
-  done
+  remove_rules_by_pattern iptables filter "$chain" "--dport 853 -j DROP"
+  remove_rules_by_pattern ip6tables filter "$chain" "--dport 853 -j DROP"
 done
-for ipt in iptables ip6tables; do
-  for chain in PREROUTING POSTROUTING; do
-    if $ipt -t mangle -C $chain -j NFQUEUE --queue-num 200 --queue-bypass 2>/dev/null; then
-      $ipt -t mangle -D $chain -j NFQUEUE --queue-num 200 --queue-bypass
-    fi
-  done
+for chain in PREROUTING POSTROUTING; do
+  remove_rules_by_pattern iptables mangle "$chain" "NFQUEUE --queue-num 200 --queue-bypass"
+  remove_rules_by_pattern ip6tables mangle "$chain" "NFQUEUE --queue-num 200 --queue-bypass"
 done
 . "$MODPATH/dnscrypt/custom-cloaking-rules.sh" disappend > /dev/null 2>&1

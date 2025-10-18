@@ -4,17 +4,53 @@ MODPATH="/data/adb/modules/zapret"
 REFRESH=$(cat "$MODPATH/config/dnscrypt-rules-fix" 2>/dev/null || echo "0")
 
 setup() {
+  INTERFACE_ONLY=$(cat "$MODPATH/config/interface-only" 2>/dev/null || echo "")
+  IGNORE_DNSCRYPT=$(cat "$MODPATH/config/interface-ignore-dnscrypt" 2>/dev/null || echo "0")
+  if [ -n "$INTERFACE_ONLY" ] && [ "$IGNORE_DNSCRYPT" = "1" ]; then
+    IPT_EXCLUDE_PREROUTING="! -i $INTERFACE_ONLY"
+    IPT_EXCLUDE_OUTPUT="! -o $INTERFACE_ONLY"
+    IPT_EXCLUDE_FORWARD="! -i $INTERFACE_ONLY ! -o $INTERFACE_ONLY"
+  else
+    IPT_EXCLUDE_PREROUTING=""
+    IPT_EXCLUDE_OUTPUT=""
+    IPT_EXCLUDE_FORWARD=""
+  fi
   echo 1 >/proc/sys/net/ipv4/conf/all/route_localnet
   for chain in PREROUTING OUTPUT FORWARD; do
     for proto in udp tcp; do
-      iptables -t nat -C "$chain" -p $proto --dport 53 -j DNAT --to-destination 127.0.0.1:5253 2>/dev/null || iptables -t nat -A "$chain" -p $proto --dport 53 -j DNAT --to-destination 127.0.0.1:5253
-      ip6tables -t nat -C "$chain" -p $proto --dport 53 -j REDIRECT --to-ports 5253 2>/dev/null || ip6tables -t nat -A "$chain" -p $proto --dport 53 -j REDIRECT --to-ports 5253
+      case "$chain" in
+        PREROUTING)
+          IPTABLES_EXCLUDE="$IPT_EXCLUDE_PREROUTING"
+          ;;
+        OUTPUT)
+          IPTABLES_EXCLUDE="$IPT_EXCLUDE_OUTPUT"
+          ;;
+        FORWARD)
+          IPTABLES_EXCLUDE="$IPT_EXCLUDE_FORWARD"
+          ;;
+        *)
+          IPTABLES_EXCLUDE=""
+          ;;
+      esac
+      iptables -t nat -C "$chain" $IPTABLES_EXCLUDE -p $proto --dport 53 -j DNAT --to-destination 127.0.0.1:5253 2>/dev/null || iptables -t nat -A "$chain" $IPTABLES_EXCLUDE -p $proto --dport 53 -j DNAT --to-destination 127.0.0.1:5253
+      ip6tables -t nat -C "$chain" $IPTABLES_EXCLUDE -p $proto --dport 53 -j REDIRECT --to-ports 5253 2>/dev/null || ip6tables -t nat -A "$chain" $IPTABLES_EXCLUDE -p $proto --dport 53 -j REDIRECT --to-ports 5253
     done
   done
   for chain in OUTPUT FORWARD; do
     for proto in udp tcp; do
-      iptables -t filter -C $chain -p $proto --dport 853 -j DROP 2>/dev/null || iptables -t filter -A $chain -p $proto --dport 853 -j DROP
-      ip6tables -t filter -C $chain -p $proto --dport 853 -j DROP 2>/dev/null || ip6tables -t filter -A $chain -p $proto --dport 853 -j DROP
+      case "$chain" in
+        OUTPUT)
+          IPTABLES_FILTER_EXCLUDE="$IPT_EXCLUDE_OUTPUT"
+          ;;
+        FORWARD)
+          IPTABLES_FILTER_EXCLUDE="$IPT_EXCLUDE_FORWARD"
+          ;;
+        *)
+          IPTABLES_FILTER_EXCLUDE=""
+          ;;
+      esac
+      iptables -t filter -C $chain $IPTABLES_FILTER_EXCLUDE -p $proto --dport 853 -j DROP 2>/dev/null || iptables -t filter -A $chain $IPTABLES_FILTER_EXCLUDE -p $proto --dport 853 -j DROP
+      ip6tables -t filter -C $chain $IPTABLES_FILTER_EXCLUDE -p $proto --dport 853 -j DROP 2>/dev/null || ip6tables -t filter -A $chain $IPTABLES_FILTER_EXCLUDE -p $proto --dport 853 -j DROP
     done
   done
 }
