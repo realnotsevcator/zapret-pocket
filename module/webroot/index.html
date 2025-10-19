@@ -1465,7 +1465,16 @@ body.light-theme #error-overlay {
                         applyLanguage();
                     }
                 };
-        const DEFAULT_ENABLED_TOGGLE_CONFIGS = new Set(['dnscrypt-cloaking-rules-update']);
+        const DEFAULT_ENABLED_TOGGLE_CONFIGS = new Set([
+            'dnscrypt-cloaking-rules-update',
+            'dnscrypt-blocked-names-update',
+            'dnscrypt-blocked-ips-update'
+        ]);
+        const DEFAULT_LINKS_BY_CONFIG = {
+            'dnscrypt-cloaking-rules-update': 'https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/cloaking-rules.txt',
+            'dnscrypt-blocked-names-update': 'https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/blocked-yandex.txt',
+            'dnscrypt-blocked-ips-update': 'https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/blocked-ips.txt'
+        };
         let linkTogglePairs = [];
         const loadingOverlay = document.getElementById('loading-overlay');
 function showLoading() {
@@ -1531,10 +1540,10 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                 let currentzapretLogText = '';
                 let currentDnscryptLogText = '';
                 linkTogglePairs = [
-                    { configName: 'dnscrypt-cloaking-rules-update', toggle: toggleCloakingUpdate, input: inputCloakingRules, lastHasLink: false },
-                    { configName: 'dnscrypt-blocked-names-update', toggle: toggleBlockedNamesUpdate, input: inputBlockedNames, lastHasLink: false },
+                    { configName: 'dnscrypt-cloaking-rules-update', toggle: toggleCloakingUpdate, input: inputCloakingRules, lastHasLink: false, defaultLink: DEFAULT_LINKS_BY_CONFIG['dnscrypt-cloaking-rules-update'] },
+                    { configName: 'dnscrypt-blocked-names-update', toggle: toggleBlockedNamesUpdate, input: inputBlockedNames, lastHasLink: false, defaultLink: DEFAULT_LINKS_BY_CONFIG['dnscrypt-blocked-names-update'] },
                     { configName: 'dnscrypt-forwarding-rules-update', toggle: toggleForwardingRulesUpdate, input: inputForwardingRules, lastHasLink: false },
-                    { configName: 'dnscrypt-blocked-ips-update', toggle: toggleBlockedIpsUpdate, input: inputBlockedIps, lastHasLink: false },
+                    { configName: 'dnscrypt-blocked-ips-update', toggle: toggleBlockedIpsUpdate, input: inputBlockedIps, lastHasLink: false, defaultLink: DEFAULT_LINKS_BY_CONFIG['dnscrypt-blocked-ips-update'] },
                     { configName: 'dnscrypt-allowed-names-update', toggle: toggleAllowedNamesUpdate, input: inputAllowedNames, lastHasLink: false },
                     { configName: 'dnscrypt-allowed-ips-update', toggle: toggleAllowedIpsUpdate, input: inputAllowedIps, lastHasLink: false }
                 ];
@@ -1647,16 +1656,26 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                         return;
                     }
                     const normalizedLink = (linkValue || '').trim();
-                    pair.lastHasLink = normalizedLink !== '';
+                    const fallbackLink = pair.defaultLink || DEFAULT_LINKS_BY_CONFIG[configName] || '';
+                    const effectiveLink = normalizedLink || fallbackLink;
+                    pair.lastHasLink = effectiveLink !== '';
                     if (pair.input) {
-                        pair.input.value = linkValue;
+                        pair.input.value = normalizedLink || fallbackLink;
                     }
                     if (!pair.toggle) {
                         return;
                     }
                     let shouldCheck = false;
                     if (pair.lastHasLink) {
-                        shouldCheck = updateValue === '1' || (updateValue === '' && DEFAULT_ENABLED_TOGGLE_CONFIGS.has(configName));
+                        if (normalizedLink) {
+                            shouldCheck = updateValue === '1' || (updateValue === '' && DEFAULT_ENABLED_TOGGLE_CONFIGS.has(configName));
+                        } else {
+                            if (updateValue === '1') {
+                                shouldCheck = true;
+                            } else if (updateValue === '') {
+                                shouldCheck = DEFAULT_ENABLED_TOGGLE_CONFIGS.has(configName);
+                            }
+                        }
                     }
                     pair.toggle.checked = pair.lastHasLink && shouldCheck;
                     pair.toggle.disabled = !pair.lastHasLink;

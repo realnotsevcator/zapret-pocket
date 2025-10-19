@@ -6,7 +6,7 @@ read_link_config() {
     shift
     for name in "$@"; do
         file="$MODPATH/config/$name"
-        if [ -f "$file" ]; then
+        if [ -f "$file" ] && grep -q '[^[:space:]]' "$file" 2>/dev/null; then
             cat "$file"
             return
         fi
@@ -20,6 +20,8 @@ CLOAKINGUPDATE=$(cat "$MODPATH/config/dnscrypt-cloaking-rules-update" 2>/dev/nul
 CLOAKINGRULESLINK=$(read_link_config "https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/cloaking-rules.txt" dnscrypt-cloaking-rules-link custom-cloaking-rules-url)
 BLOCKEDUPDATE=$(cat "$MODPATH/config/dnscrypt-blocked-names-update" 2>/dev/null || echo "0")
 BLOCKEDNAMESLINK=$(read_link_config "https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/blocked-yandex.txt" dnscrypt-blocked-names-link custom-blocked-names-url)
+BLOCKEDIPSUPDATE=$(cat "$MODPATH/config/dnscrypt-blocked-ips-update" 2>/dev/null || echo "0")
+BLOCKEDIPSLINK=$(read_link_config "https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/blocked-ips.txt" dnscrypt-blocked-ips-link custom-blocked-ips-url)
 UPDATEONSTART=$(cat "$MODPATH/config/update-on-start" 2>/dev/null || echo "1")
 CUSTOMLINKIPSETV4=$(read_link_config "https://raw.githubusercontent.com/sevcator/zapret-lists/refs/heads/main/ipset-v4.txt" ipset-v4-link custom-ipv4-ranges-url)
 CUSTOMLINKIPSETV6=$(read_link_config "https://raw.githubusercontent.com/sevcator/zapret-lists/refs/heads/main/ipset-v6.txt" ipset-v6-link custom-ipv6-ranges-url)
@@ -213,6 +215,12 @@ setup() {
             y|yes) BLOCKEDUPDATE="1"; echo "- Enabled" ;;
         esac
 
+        echo -n "- Auto-update blocked IPs for DNSCrypt? "
+        read resp
+        case "$(echo "$resp" | tr A-Z a-z)" in
+            y|yes) BLOCKEDIPSUPDATE="1"; echo "- Enabled" ;;
+        esac
+
         echo -n "- Do you want to change source links for update DNSCrypt files? "
         read resp2
         case "$(echo "$resp2" | tr A-Z a-z)" in
@@ -235,6 +243,15 @@ setup() {
                 else
                     echo "- Keeping old link: $BLOCKEDNAMESLINK"
                 fi
+
+                echo -n "- Enter link to blocked-ips.txt (leave blank to keep current): "
+                read new_blocked_ips
+                if [ -n "$new_blocked_ips" ]; then
+                    BLOCKEDIPSLINK="$new_blocked_ips"
+                    echo "- Link updated"
+                else
+                    echo "- Keeping old link: $BLOCKEDIPSLINK"
+                fi
             ;;
         esac
     fi
@@ -247,6 +264,9 @@ setup() {
     echo "$BLOCKEDUPDATE" > "$MODPATH/config/dnscrypt-blocked-names-update"
     echo "$BLOCKEDNAMESLINK" > "$MODPATH/config/dnscrypt-blocked-names-link"
     rm -f "$MODPATH/config/custom-blocked-names-url"
+    echo "$BLOCKEDIPSUPDATE" > "$MODPATH/config/dnscrypt-blocked-ips-update"
+    echo "$BLOCKEDIPSLINK" > "$MODPATH/config/dnscrypt-blocked-ips-link"
+    rm -f "$MODPATH/config/custom-blocked-ips-url"
     echo "$UPDATEONSTART" > "$MODPATH/config/update-on-start"
     echo "$CUSTOMLINKIPSETV4" > "$MODPATH/config/ipset-v4-link"
     rm -f "$MODPATH/config/custom-ipv4-ranges-url"
