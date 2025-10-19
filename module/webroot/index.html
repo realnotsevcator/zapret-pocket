@@ -1593,13 +1593,13 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                         if (textEl) textEl.textContent = 'Stopped';
                     }
                 };
-                const run = async (command) => {
+                const run = async (command, { trim = true } = {}) => {
                     const { errno, stdout, stderr } = await ksu_exec(command);
                     if (errno !== 0) {
                         console.error(`Command failed: ${command}\nStderr: ${stderr}`);
                         throw new Error(stderr || `Command failed with code ${errno}`);
                     }
-                    return stdout.trim();
+                    return trim ? stdout.trim() : stdout;
                 };
                 const shellEscape = (value) => value.replace(/'/g, "'\\''");
                 const updateDnscryptDependentFields = (dnscryptEnabled, ipv6Enabled) => {
@@ -1759,18 +1759,18 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                         const allowedIpsLink = await run(`cat ${MODPATH}/config/dnscrypt-allowed-ips-link 2>/dev/null || cat ${MODPATH}/config/custom-allowed-ips-url 2>/dev/null || true`);
                         const interfaceOnly = await run(`cat ${MODPATH}/config/interface-only 2>/dev/null || true`);
                         const ignoreDnscrypt = await run(`cat ${MODPATH}/config/interface-ignore-dnscrypt 2>/dev/null || true`);
-                        const listCustom = await run(`cat ${MODPATH}/list/custom.txt 2>/dev/null || true`);
-                        const listExclude = await run(`cat ${MODPATH}/list/exclude.txt 2>/dev/null || true`);
-                        const ipsetCustom = await run(`cat ${MODPATH}/ipset/custom.txt 2>/dev/null || true`);
-                        const ipsetExclude = await run(`cat ${MODPATH}/ipset/exclude.txt 2>/dev/null || true`);
-                        const dnscryptCustom = await run(`cat ${MODPATH}/dnscrypt/custom-cloaking-rules.txt 2>/dev/null || true`);
-                        const dnscryptCustomForwardingRules = await run(`cat ${MODPATH}/dnscrypt/custom-forwarding-rules.txt 2>/dev/null || true`);
-                        const dnscryptCustomBlockedNames = await run(`cat ${MODPATH}/dnscrypt/custom-blocked-names.txt 2>/dev/null || true`);
-                        const dnscryptCustomBlockedIps = await run(`cat ${MODPATH}/dnscrypt/custom-blocked-ips.txt 2>/dev/null || true`);
-                        const dnscryptCustomAllowedNames = await run(`cat ${MODPATH}/dnscrypt/custom-allowed-names.txt 2>/dev/null || true`);
-                        const dnscryptCustomAllowedIps = await run(`cat ${MODPATH}/dnscrypt/custom-allowed-ips.txt 2>/dev/null || true`);
-                        const zapretLogs = await run(`cat ${MODPATH}/zapret/latest.log 2>/dev/null || true`);
-                        const dnscryptLogs = await run(`cat ${MODPATH}/dnscrypt/latest.log 2>/dev/null || true`);
+                        const listCustom = await run(`cat ${MODPATH}/list/custom.txt 2>/dev/null || true`, { trim: false });
+                        const listExclude = await run(`cat ${MODPATH}/list/exclude.txt 2>/dev/null || true`, { trim: false });
+                        const ipsetCustom = await run(`cat ${MODPATH}/ipset/custom.txt 2>/dev/null || true`, { trim: false });
+                        const ipsetExclude = await run(`cat ${MODPATH}/ipset/exclude.txt 2>/dev/null || true`, { trim: false });
+                        const dnscryptCustom = await run(`cat ${MODPATH}/dnscrypt/custom-cloaking-rules.txt 2>/dev/null || true`, { trim: false });
+                        const dnscryptCustomForwardingRules = await run(`cat ${MODPATH}/dnscrypt/custom-forwarding-rules.txt 2>/dev/null || true`, { trim: false });
+                        const dnscryptCustomBlockedNames = await run(`cat ${MODPATH}/dnscrypt/custom-blocked-names.txt 2>/dev/null || true`, { trim: false });
+                        const dnscryptCustomBlockedIps = await run(`cat ${MODPATH}/dnscrypt/custom-blocked-ips.txt 2>/dev/null || true`, { trim: false });
+                        const dnscryptCustomAllowedNames = await run(`cat ${MODPATH}/dnscrypt/custom-allowed-names.txt 2>/dev/null || true`, { trim: false });
+                        const dnscryptCustomAllowedIps = await run(`cat ${MODPATH}/dnscrypt/custom-allowed-ips.txt 2>/dev/null || true`, { trim: false });
+                        const zapretLogs = await run(`cat ${MODPATH}/zapret/latest.log 2>/dev/null || true`, { trim: false });
+                        const dnscryptLogs = await run(`cat ${MODPATH}/dnscrypt/latest.log 2>/dev/null || true`, { trim: false });
                         currentzapretLogText = zapretLogs;
                         currentDnscryptLogText = dnscryptLogs;
                         const moduleProp = await run(`cat ${MODPATH}/module.prop 2>/dev/null || true`);
