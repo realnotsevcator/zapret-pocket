@@ -38,7 +38,6 @@ touch "$MODPATH/ipset/ipset-v6.txt"
 touch "$MODPATH/list/custom.txt"
 touch "$MODPATH/list/default.txt"
 touch "$MODPATH/list/exclude.txt"
-touch "$MODPATH/list/providers.txt"
 touch "$MODPATH/list/google.txt"
 touch "$MODPATH/list/reestr.txt"
 if [ "$UPDATEONSTART" = "1" ]; then
