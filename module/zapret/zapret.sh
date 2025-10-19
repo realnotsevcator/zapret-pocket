@@ -48,11 +48,11 @@ addMultiPort() {
         esac
     done
 }
-if [ "$(cat /proc/net/ip_tables_targets | grep -c 'NFQUEUE')" == "0" ]; then
+if [ "$(cat /proc/net/ip_tables_targets | grep -c 'NFQUEUE')" = "0" ]; then
     echo "iptables is bad!"
     exit
 fi
-if [ "$(cat /proc/net/ip6_tables_targets | grep -c 'NFQUEUE')" == "0" ]; then
+if [ "$(cat /proc/net/ip6_tables_targets | grep -c 'NFQUEUE')" = "0" ]; then
     echo "ip6tables is bad!"
     exit
 fi

@@ -361,7 +361,19 @@ custom() {
         return 0
     fi
 
-    if find "$MODPATH/list" "$MODPATH/ipset" -type f -name "*.txt" ! -name "custom.txt" 2>/dev/null | xargs grep -Fq "$entry" 2>/dev/null; then
+    found_in_other_list=0
+    for file in "$MODPATH"/list/*.txt "$MODPATH"/ipset/*.txt; do
+        [ -f "$file" ] || continue
+        case "$(basename "$file")" in
+            custom.txt) continue ;;
+        esac
+        if grep -Fxq "$entry" "$file" 2>/dev/null; then
+            found_in_other_list=1
+            break
+        fi
+    done
+
+    if [ "$found_in_other_list" -eq 1 ]; then
         echo "! Already added in other lists, aborted"
         return 1
     fi
