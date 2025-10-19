@@ -304,6 +304,13 @@
             transition: .3s;
             border-radius: 50%;
         }
+        .switch input:disabled + .slider {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .switch input:disabled + .slider:before {
+            background-color: var(--disabled-color);
+        }
         input:checked + .slider {
             background-color: var(--accent-color);
         }
@@ -1058,7 +1065,7 @@ body.light-theme #error-overlay {
 </label>
 </div>
 <div class="setting-item dnscrypt-related dnscrypt-dependent">
-<label data-i18n="update_cloaking">Обновление Cloaking Rules</label>
+<label data-i18n="update_cloaking">Cloaking Rules</label>
 <label class="switch">
 <input id="toggle-cloaking-update" type="checkbox"/>
 <span class="slider">
@@ -1066,9 +1073,41 @@ body.light-theme #error-overlay {
 </label>
 </div>
 <div class="setting-item dnscrypt-related dnscrypt-dependent">
-<label data-i18n="update_blocked_names">Обновление доменов для блокировки</label>
+<label data-i18n="update_blocked_names">Блокируемые домены</label>
 <label class="switch">
 <input id="toggle-blocked-names-update" type="checkbox"/>
+<span class="slider">
+</span>
+</label>
+</div>
+<div class="setting-item dnscrypt-related dnscrypt-dependent">
+<label data-i18n="update_forwarding_rules">Forwarding Rules</label>
+<label class="switch">
+<input id="toggle-forwarding-rules-update" type="checkbox"/>
+<span class="slider">
+</span>
+</label>
+</div>
+<div class="setting-item dnscrypt-related dnscrypt-dependent">
+<label data-i18n="update_blocked_ips">Блокируемые IP</label>
+<label class="switch">
+<input id="toggle-blocked-ips-update" type="checkbox"/>
+<span class="slider">
+</span>
+</label>
+</div>
+<div class="setting-item dnscrypt-related dnscrypt-dependent">
+<label data-i18n="update_allowed_names">Разрешенные домены</label>
+<label class="switch">
+<input id="toggle-allowed-names-update" type="checkbox"/>
+<span class="slider">
+</span>
+</label>
+</div>
+<div class="setting-item dnscrypt-related dnscrypt-dependent">
+<label data-i18n="update_allowed_ips">Разрешенные IP</label>
+<label class="switch">
+<input id="toggle-allowed-ips-update" type="checkbox"/>
 <span class="slider">
 </span>
 </label>
@@ -1096,6 +1135,22 @@ body.light-theme #error-overlay {
 <div class="setting-item dnscrypt-related dnscrypt-dependent stacked">
 <label data-i18n="blocked_names_link">Ссылка на Blocked Names</label>
 <input class="text-input" id="input-blocked-names" placeholder="https://example.github.io/blocked-names.txt" type="text"/>
+</div>
+<div class="setting-item dnscrypt-related dnscrypt-dependent stacked">
+    <label data-i18n="forwarding_rules_link">Ссылка на Forwarding Rules</label>
+    <input class="text-input" id="input-forwarding-rules" placeholder="https://example.github.io/forwarding-rules.txt" type="text"/>
+</div>
+<div class="setting-item dnscrypt-related dnscrypt-dependent stacked">
+    <label data-i18n="blocked_ips_link">Ссылка на Blocked IPs</label>
+    <input class="text-input" id="input-blocked-ips" placeholder="https://example.github.io/blocked-ips.txt" type="text"/>
+</div>
+<div class="setting-item dnscrypt-related dnscrypt-dependent stacked">
+    <label data-i18n="allowed_names_link">Ссылка на Allowed Names</label>
+    <input class="text-input" id="input-allowed-names" placeholder="https://example.github.io/allowed-names.txt" type="text"/>
+</div>
+<div class="setting-item dnscrypt-related dnscrypt-dependent stacked">
+    <label data-i18n="allowed_ips_link">Ссылка на Allowed IPs</label>
+    <input class="text-input" id="input-allowed-ips" placeholder="https://example.github.io/allowed-ips.txt" type="text"/>
 </div>
 </div>
 <p class="note" data-i18n="note_restart">После изменения настроек не забудьте перезапустить службу.</p>
@@ -1236,8 +1291,12 @@ body.light-theme #error-overlay {
                 "ignore_dnscrypt": "Игнорировать DNSCrypt Proxy",
                 "dnscrypt_rules_refresh": "Обновление правил",
                 "update_on_start": "Обновление при запуске",
-                "update_cloaking": "Обновление Cloaking Rules",
-                "update_blocked_names": "Обновление Blocked Names",
+                "update_cloaking": "Cloaking Rules",
+                "update_blocked_names": "Блокируемые домены",
+                "update_forwarding_rules": "Forwarding Rules",
+                "update_blocked_ips": "Блокируемые IP",
+                "update_allowed_names": "Разрешенные домены",
+                "update_allowed_ips": "Разрешенные IP",
                 "ipv6_enable": "Включить IPv6",
                 "network_tweaks": "Твики интернета",
                 "interface_only": "Только для интерфейса",
@@ -1249,6 +1308,10 @@ body.light-theme #error-overlay {
                 "cloaking_rules_link": "Ссылка на Cloaking Rules",
                 "cloaking_rules_hint": "Можно указывать ссылки на allowed-names.txt, allowed-ips.txt, blocked-ips.txt или forwarding-rules.txt.",
                 "blocked_names_link": "Ссылка на Blocked Names",
+                "forwarding_rules_link": "Ссылка на Forwarding Rules",
+                "blocked_ips_link": "Ссылка на Blocked IPs",
+                "allowed_names_link": "Ссылка на Allowed Names",
+                "allowed_ips_link": "Ссылка на Allowed IPs",
                 "note_restart": "После изменения настроек не забудьте перезапустить службу",
                 "interface_settings_title": "Интерфейс",
                 "dark_theme": "Темная тема",
@@ -1297,8 +1360,12 @@ body.light-theme #error-overlay {
                 "ignore_dnscrypt": "Ignore DNSCrypt Proxy",
                 "dnscrypt_rules_refresh": "Refresh rules",
                 "update_on_start": "Update on startup",
-                "update_cloaking": "Update Cloaking Rules",
-                "update_blocked_names": "Update Blocked Names",
+                "update_cloaking": "Cloaking Rules",
+                "update_blocked_names": "Blocked Names",
+                "update_forwarding_rules": "Forwarding Rules",
+                "update_blocked_ips": "Blocked IPs",
+                "update_allowed_names": "Allowed Names",
+                "update_allowed_ips": "Allowed IPs",
                 "ipv6_enable": "Enable IPv6",
                 "network_tweaks": "Network Tweaks",
                 "interface_only": "Only for interface",
@@ -1310,6 +1377,10 @@ body.light-theme #error-overlay {
                 "cloaking_rules_link": "Cloaking Rules Link",
                 "cloaking_rules_hint": "Links may end with allowed-names.txt, allowed-ips.txt, blocked-ips.txt, or forwarding-rules.txt.",
                 "blocked_names_link": "Blocked Names Link",
+                "forwarding_rules_link": "Forwarding Rules Link",
+                "blocked_ips_link": "Blocked IPs Link",
+                "allowed_names_link": "Allowed Names Link",
+                "allowed_ips_link": "Allowed IPs Link",
                 "note_restart": "Restart the service after changing settings",
                 "interface_settings_title": "Interface",
                 "dark_theme": "Dark Theme",
@@ -1394,7 +1465,9 @@ body.light-theme #error-overlay {
                         applyLanguage();
                     }
                 };
-const loadingOverlay = document.getElementById('loading-overlay');
+        const DEFAULT_ENABLED_TOGGLE_CONFIGS = new Set(['dnscrypt-cloaking-rules-update']);
+        let linkTogglePairs = [];
+        const loadingOverlay = document.getElementById('loading-overlay');
 function showLoading() {
     btnPrimary.disabled = true;
     loadingOverlay.classList.remove('hidden');
@@ -1427,6 +1500,10 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                 const toggleUpdateOnStart = document.getElementById('toggle-update-on-start');
                 const toggleCloakingUpdate = document.getElementById('toggle-cloaking-update');
                 const toggleBlockedNamesUpdate = document.getElementById('toggle-blocked-names-update');
+                const toggleForwardingRulesUpdate = document.getElementById('toggle-forwarding-rules-update');
+                const toggleBlockedIpsUpdate = document.getElementById('toggle-blocked-ips-update');
+                const toggleAllowedNamesUpdate = document.getElementById('toggle-allowed-names-update');
+                const toggleAllowedIpsUpdate = document.getElementById('toggle-allowed-ips-update');
                 const toggleIpv6 = document.getElementById('toggle-ipv6');
                 const logsContentzapret = document.getElementById('logs-content-zapret');
                 const logsContentDnscrypt = document.getElementById('logs-content-dnscrypt');
@@ -1446,9 +1523,21 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                 const inputRknRegistry = document.getElementById('input-rkn-registry');
                 const inputCloakingRules = document.getElementById('input-cloaking-rules');
                 const inputBlockedNames = document.getElementById('input-blocked-names');
+                const inputForwardingRules = document.getElementById('input-forwarding-rules');
+                const inputBlockedIps = document.getElementById('input-blocked-ips');
+                const inputAllowedNames = document.getElementById('input-allowed-names');
+                const inputAllowedIps = document.getElementById('input-allowed-ips');
                 const interfaceInput = document.getElementById('input-interface-only');
                 let currentzapretLogText = '';
                 let currentDnscryptLogText = '';
+                linkTogglePairs = [
+                    { configName: 'dnscrypt-cloaking-rules-update', toggle: toggleCloakingUpdate, input: inputCloakingRules, lastHasLink: false },
+                    { configName: 'dnscrypt-blocked-names-update', toggle: toggleBlockedNamesUpdate, input: inputBlockedNames, lastHasLink: false },
+                    { configName: 'dnscrypt-forwarding-rules-update', toggle: toggleForwardingRulesUpdate, input: inputForwardingRules, lastHasLink: false },
+                    { configName: 'dnscrypt-blocked-ips-update', toggle: toggleBlockedIpsUpdate, input: inputBlockedIps, lastHasLink: false },
+                    { configName: 'dnscrypt-allowed-names-update', toggle: toggleAllowedNamesUpdate, input: inputAllowedNames, lastHasLink: false },
+                    { configName: 'dnscrypt-allowed-ips-update', toggle: toggleAllowedIpsUpdate, input: inputAllowedIps, lastHasLink: false }
+                ];
                 const fileContents = {
                     'list/custom.txt': document.getElementById('file-list-custom'),
                     'list/exclude.txt': document.getElementById('file-list-exclude'),
@@ -1540,6 +1629,37 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                             }
                         }
                     }
+                    linkTogglePairs.forEach(pair => {
+                        if (!pair || !pair.toggle) {
+                            return;
+                        }
+                        const hasLink = !!pair.lastHasLink;
+                        const shouldDisableToggle = shouldDisableDnscryptLists || !hasLink;
+                        pair.toggle.disabled = shouldDisableToggle;
+                        if (!hasLink) {
+                            pair.toggle.checked = false;
+                        }
+                    });
+                };
+                const applyLinkToggleState = (configName, linkValue, updateValue) => {
+                    const pair = linkTogglePairs.find(item => item.configName === configName);
+                    if (!pair) {
+                        return;
+                    }
+                    const normalizedLink = (linkValue || '').trim();
+                    pair.lastHasLink = normalizedLink !== '';
+                    if (pair.input) {
+                        pair.input.value = linkValue;
+                    }
+                    if (!pair.toggle) {
+                        return;
+                    }
+                    let shouldCheck = false;
+                    if (pair.lastHasLink) {
+                        shouldCheck = updateValue === '1' || (updateValue === '' && DEFAULT_ENABLED_TOGGLE_CONFIGS.has(configName));
+                    }
+                    pair.toggle.checked = pair.lastHasLink && shouldCheck;
+                    pair.toggle.disabled = !pair.lastHasLink;
                 };
                 const renderzapretLogs = (logText) => {
                     if (!logText) {
@@ -1602,6 +1722,10 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                         const updateOnStart = await run(`cat ${MODPATH}/config/update-on-start 2>/dev/null || true`);
                         const cloakingUpdate = await run(`cat ${MODPATH}/config/dnscrypt-cloaking-rules-update 2>/dev/null || true`);
                         const blockedNamesUpdate = await run(`cat ${MODPATH}/config/dnscrypt-blocked-names-update 2>/dev/null || true`);
+                        const forwardingRulesUpdate = await run(`cat ${MODPATH}/config/dnscrypt-forwarding-rules-update 2>/dev/null || true`);
+                        const blockedIpsUpdate = await run(`cat ${MODPATH}/config/dnscrypt-blocked-ips-update 2>/dev/null || true`);
+                        const allowedNamesUpdate = await run(`cat ${MODPATH}/config/dnscrypt-allowed-names-update 2>/dev/null || true`);
+                        const allowedIpsUpdate = await run(`cat ${MODPATH}/config/dnscrypt-allowed-ips-update 2>/dev/null || true`);
                         const bypassCalls = await run(`cat ${MODPATH}/config/bypass-calls 2>/dev/null || true`);
                         const ipv6Enable = await run(`cat ${MODPATH}/config/ipv6-enable 2>/dev/null || true`);
                         const networkTweaks = await run(`cat ${MODPATH}/config/network-tweaks 2>/dev/null || true`);
@@ -1610,6 +1734,10 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                         const rknRegistryLink = await run(`cat ${MODPATH}/config/reestr-link 2>/dev/null || cat ${MODPATH}/config/custom-rkn-registry-url 2>/dev/null || true`);
                         const cloakingRulesLink = await run(`cat ${MODPATH}/config/dnscrypt-cloaking-rules-link 2>/dev/null || cat ${MODPATH}/config/custom-cloaking-rules-url 2>/dev/null || true`);
                         const blockedNamesLink = await run(`cat ${MODPATH}/config/dnscrypt-blocked-names-link 2>/dev/null || cat ${MODPATH}/config/custom-blocked-names-url 2>/dev/null || true`);
+                        const forwardingRulesLink = await run(`cat ${MODPATH}/config/dnscrypt-forwarding-rules-link 2>/dev/null || cat ${MODPATH}/config/custom-forwarding-rules-url 2>/dev/null || true`);
+                        const blockedIpsLink = await run(`cat ${MODPATH}/config/dnscrypt-blocked-ips-link 2>/dev/null || cat ${MODPATH}/config/custom-blocked-ips-url 2>/dev/null || true`);
+                        const allowedNamesLink = await run(`cat ${MODPATH}/config/dnscrypt-allowed-names-link 2>/dev/null || cat ${MODPATH}/config/custom-allowed-names-url 2>/dev/null || true`);
+                        const allowedIpsLink = await run(`cat ${MODPATH}/config/dnscrypt-allowed-ips-link 2>/dev/null || cat ${MODPATH}/config/custom-allowed-ips-url 2>/dev/null || true`);
                         const interfaceOnly = await run(`cat ${MODPATH}/config/interface-only 2>/dev/null || true`);
                         const ignoreDnscrypt = await run(`cat ${MODPATH}/config/interface-ignore-dnscrypt 2>/dev/null || true`);
                         const listCustom = await run(`cat ${MODPATH}/list/custom.txt 2>/dev/null || true`);
@@ -1657,15 +1785,17 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                         toggleDnscrypt.checked = isDnscryptChecked;
                         toggleRulesRecheck.checked = rulesRecheck === '1';
                         toggleUpdateOnStart.checked = updateOnStart === '1' || updateOnStart === '';
-                        toggleCloakingUpdate.checked = cloakingUpdate === '1';
-                        toggleBlockedNamesUpdate.checked = blockedNamesUpdate === '1';
                         document.getElementById('toggle-bypass-calls').checked = bypassCalls === '1';
                         document.getElementById('toggle-network-tweaks').checked = networkTweaks === '1';
                         inputIpv4Ranges.value = ipv4RangesLink;
                         inputIpv6Ranges.value = ipv6RangesLink;
                         inputRknRegistry.value = rknRegistryLink;
-                        inputCloakingRules.value = cloakingRulesLink;
-                        inputBlockedNames.value = blockedNamesLink;
+                        applyLinkToggleState('dnscrypt-cloaking-rules-update', cloakingRulesLink, cloakingUpdate);
+                        applyLinkToggleState('dnscrypt-blocked-names-update', blockedNamesLink, blockedNamesUpdate);
+                        applyLinkToggleState('dnscrypt-forwarding-rules-update', forwardingRulesLink, forwardingRulesUpdate);
+                        applyLinkToggleState('dnscrypt-blocked-ips-update', blockedIpsLink, blockedIpsUpdate);
+                        applyLinkToggleState('dnscrypt-allowed-names-update', allowedNamesLink, allowedNamesUpdate);
+                        applyLinkToggleState('dnscrypt-allowed-ips-update', allowedIpsLink, allowedIpsUpdate);
                         interfaceInput.value = interfaceOnly;
                         lastInterfaceOnlyValue = interfaceOnly;
                         const ignoreDnscryptEnabled = ignoreDnscrypt === '1';
@@ -1823,19 +1953,30 @@ btnPrimary.addEventListener('click', async () => {
                 setupToggle(toggleUpdateOnStart, 'update-on-start');
                 setupToggle(toggleCloakingUpdate, 'dnscrypt-cloaking-rules-update');
                 setupToggle(toggleBlockedNamesUpdate, 'dnscrypt-blocked-names-update');
+                setupToggle(toggleForwardingRulesUpdate, 'dnscrypt-forwarding-rules-update');
+                setupToggle(toggleBlockedIpsUpdate, 'dnscrypt-blocked-ips-update');
+                setupToggle(toggleAllowedNamesUpdate, 'dnscrypt-allowed-names-update');
+                setupToggle(toggleAllowedIpsUpdate, 'dnscrypt-allowed-ips-update');
                 setupToggle(document.getElementById('toggle-bypass-calls'), 'bypass-calls');
                 setupToggle(toggleIpv6, 'ipv6-enable', async () => {
                     const ipv6Enabled = toggleIpv6.checked;
                     updateDnscryptDependentFields(toggleDnscrypt.checked, ipv6Enabled);
                 });
                 setupToggle(document.getElementById('toggle-network-tweaks'), 'network-tweaks');
-                const setupCustomLinkInput = (input, configName, legacyNames = []) => {
+                const setupCustomLinkInput = (input, configName, legacyNames = [], toggleElement, toggleConfigName) => {
                     input.addEventListener('blur', async () => {
                         const value = input.value.trim();
                         if (value === '') {
                             const commands = [`rm -f ${MODPATH}/config/${configName}`];
                             legacyNames.forEach(name => commands.push(`rm -f ${MODPATH}/config/${name}`));
+                            if (toggleElement && toggleConfigName) {
+                                commands.push(`rm -f ${MODPATH}/config/${toggleConfigName}`);
+                            }
                             await run(commands.join('; '));
+                            if (toggleElement && toggleConfigName) {
+                                applyLinkToggleState(toggleConfigName, '', '0');
+                                updateDnscryptDependentFields(toggleDnscrypt.checked, toggleIpv6.checked);
+                            }
                         } else {
                             const escapedValue = shellEscape(value);
                             let command = `echo '${escapedValue}' > ${MODPATH}/config/${configName}`;
@@ -1843,14 +1984,22 @@ btnPrimary.addEventListener('click', async () => {
                                 command += `; rm -f ${MODPATH}/config/${name}`;
                             });
                             await run(command);
+                            if (toggleElement && toggleConfigName) {
+                                applyLinkToggleState(toggleConfigName, value, toggleElement.checked ? '1' : '0');
+                                updateDnscryptDependentFields(toggleDnscrypt.checked, toggleIpv6.checked);
+                            }
                         }
                     });
                 };
                 setupCustomLinkInput(inputIpv4Ranges, 'ipset-v4-link', ['custom-ipv4-ranges-url']);
                 setupCustomLinkInput(inputIpv6Ranges, 'ipset-v6-link', ['custom-ipv6-ranges-url']);
                 setupCustomLinkInput(inputRknRegistry, 'reestr-link', ['custom-rkn-registry-url']);
-                setupCustomLinkInput(inputCloakingRules, 'dnscrypt-cloaking-rules-link', ['custom-cloaking-rules-url']);
-                setupCustomLinkInput(inputBlockedNames, 'dnscrypt-blocked-names-link', ['custom-blocked-names-url']);
+                setupCustomLinkInput(inputCloakingRules, 'dnscrypt-cloaking-rules-link', ['custom-cloaking-rules-url'], toggleCloakingUpdate, 'dnscrypt-cloaking-rules-update');
+                setupCustomLinkInput(inputBlockedNames, 'dnscrypt-blocked-names-link', ['custom-blocked-names-url'], toggleBlockedNamesUpdate, 'dnscrypt-blocked-names-update');
+                setupCustomLinkInput(inputForwardingRules, 'dnscrypt-forwarding-rules-link', ['custom-forwarding-rules-url'], toggleForwardingRulesUpdate, 'dnscrypt-forwarding-rules-update');
+                setupCustomLinkInput(inputBlockedIps, 'dnscrypt-blocked-ips-link', ['custom-blocked-ips-url'], toggleBlockedIpsUpdate, 'dnscrypt-blocked-ips-update');
+                setupCustomLinkInput(inputAllowedNames, 'dnscrypt-allowed-names-link', ['custom-allowed-names-url'], toggleAllowedNamesUpdate, 'dnscrypt-allowed-names-update');
+                setupCustomLinkInput(inputAllowedIps, 'dnscrypt-allowed-ips-link', ['custom-allowed-ips-url'], toggleAllowedIpsUpdate, 'dnscrypt-allowed-ips-update');
                 const interfaceNamePattern = /^[A-Za-z0-9_.:-]{1,15}$/;
                 const clearInterfaceSetting = async () => {
                     interfaceInput.value = '';
