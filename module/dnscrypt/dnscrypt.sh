@@ -6,52 +6,52 @@ REFRESH=$(cat "$MODPATH/config/dnscrypt-rules-fix" 2>/dev/null || echo "0")
 setup() {
   INTERFACE_ONLY=$(cat "$MODPATH/config/interface-only" 2>/dev/null || echo "")
   IGNORE_DNSCRYPT=$(cat "$MODPATH/config/interface-ignore-dnscrypt" 2>/dev/null || echo "0")
-  if [ -n "$INTERFACE_ONLY" ] && [ "$IGNORE_DNSCRYPT" = "1" ]; then
-    IPT_EXCLUDE_PREROUTING="! -i $INTERFACE_ONLY"
-    IPT_EXCLUDE_OUTPUT="! -o $INTERFACE_ONLY"
-    IPT_EXCLUDE_FORWARD="! -i $INTERFACE_ONLY ! -o $INTERFACE_ONLY"
+  if [ -n "$INTERFACE_ONLY" ] && [ "$IGNORE_DNSCRYPT" != "1" ]; then
+    IPT_MATCH_PREROUTING="-i $INTERFACE_ONLY"
+    IPT_MATCH_OUTPUT="-o $INTERFACE_ONLY"
+    IPT_MATCH_FORWARD_IN="-i $INTERFACE_ONLY"
+    IPT_MATCH_FORWARD_OUT="-o $INTERFACE_ONLY"
   else
-    IPT_EXCLUDE_PREROUTING=""
-    IPT_EXCLUDE_OUTPUT=""
-    IPT_EXCLUDE_FORWARD=""
+    IPT_MATCH_PREROUTING=""
+    IPT_MATCH_OUTPUT=""
+    IPT_MATCH_FORWARD_IN=""
+    IPT_MATCH_FORWARD_OUT=""
   fi
   echo 1 >/proc/sys/net/ipv4/conf/all/route_localnet
-  for chain in PREROUTING OUTPUT FORWARD; do
-    for proto in udp tcp; do
-      case "$chain" in
-        PREROUTING)
-          IPTABLES_EXCLUDE="$IPT_EXCLUDE_PREROUTING"
-          ;;
-        OUTPUT)
-          IPTABLES_EXCLUDE="$IPT_EXCLUDE_OUTPUT"
-          ;;
-        FORWARD)
-          IPTABLES_EXCLUDE="$IPT_EXCLUDE_FORWARD"
-          ;;
-        *)
-          IPTABLES_EXCLUDE=""
-          ;;
-      esac
-      iptables -t nat -C "$chain" $IPTABLES_EXCLUDE -p $proto --dport 53 -j DNAT --to-destination 127.0.0.1:5253 2>/dev/null || iptables -t nat -A "$chain" $IPTABLES_EXCLUDE -p $proto --dport 53 -j DNAT --to-destination 127.0.0.1:5253
-      ip6tables -t nat -C "$chain" $IPTABLES_EXCLUDE -p $proto --dport 53 -j REDIRECT --to-ports 5253 2>/dev/null || ip6tables -t nat -A "$chain" $IPTABLES_EXCLUDE -p $proto --dport 53 -j REDIRECT --to-ports 5253
-    done
-  done
-  for chain in OUTPUT FORWARD; do
-    for proto in udp tcp; do
-      case "$chain" in
-        OUTPUT)
-          IPTABLES_FILTER_EXCLUDE="$IPT_EXCLUDE_OUTPUT"
-          ;;
-        FORWARD)
-          IPTABLES_FILTER_EXCLUDE="$IPT_EXCLUDE_FORWARD"
-          ;;
-        *)
-          IPTABLES_FILTER_EXCLUDE=""
-          ;;
-      esac
-      iptables -t filter -C $chain $IPTABLES_FILTER_EXCLUDE -p $proto --dport 853 -j DROP 2>/dev/null || iptables -t filter -A $chain $IPTABLES_FILTER_EXCLUDE -p $proto --dport 853 -j DROP
-      ip6tables -t filter -C $chain $IPTABLES_FILTER_EXCLUDE -p $proto --dport 853 -j DROP 2>/dev/null || ip6tables -t filter -A $chain $IPTABLES_FILTER_EXCLUDE -p $proto --dport 853 -j DROP
-    done
+  add_rule() {
+    local cmd=$1 table=$2 chain=$3 match=$4 proto=$5
+    shift 5
+    if [ -n "$match" ]; then
+      $cmd -t "$table" -C "$chain" $match -p "$proto" "$@" 2>/dev/null || \
+      $cmd -t "$table" -A "$chain" $match -p "$proto" "$@"
+    else
+      $cmd -t "$table" -C "$chain" -p "$proto" "$@" 2>/dev/null || \
+      $cmd -t "$table" -A "$chain" -p "$proto" "$@"
+    fi
+  }
+  for proto in udp tcp; do
+    add_rule iptables nat PREROUTING "$IPT_MATCH_PREROUTING" "$proto" --dport 53 -j DNAT --to-destination 127.0.0.1:5253
+    add_rule iptables nat OUTPUT "$IPT_MATCH_OUTPUT" "$proto" --dport 53 -j DNAT --to-destination 127.0.0.1:5253
+    add_rule iptables nat FORWARD "$IPT_MATCH_FORWARD_IN" "$proto" --dport 53 -j DNAT --to-destination 127.0.0.1:5253
+    if [ "$IPT_MATCH_FORWARD_OUT" != "$IPT_MATCH_FORWARD_IN" ]; then
+      add_rule iptables nat FORWARD "$IPT_MATCH_FORWARD_OUT" "$proto" --dport 53 -j DNAT --to-destination 127.0.0.1:5253
+    fi
+    add_rule ip6tables nat PREROUTING "$IPT_MATCH_PREROUTING" "$proto" --dport 53 -j REDIRECT --to-ports 5253
+    add_rule ip6tables nat OUTPUT "$IPT_MATCH_OUTPUT" "$proto" --dport 53 -j REDIRECT --to-ports 5253
+    add_rule ip6tables nat FORWARD "$IPT_MATCH_FORWARD_IN" "$proto" --dport 53 -j REDIRECT --to-ports 5253
+    if [ "$IPT_MATCH_FORWARD_OUT" != "$IPT_MATCH_FORWARD_IN" ]; then
+      add_rule ip6tables nat FORWARD "$IPT_MATCH_FORWARD_OUT" "$proto" --dport 53 -j REDIRECT --to-ports 5253
+    fi
+    add_rule iptables filter OUTPUT "$IPT_MATCH_OUTPUT" "$proto" --dport 853 -j DROP
+    add_rule iptables filter FORWARD "$IPT_MATCH_FORWARD_IN" "$proto" --dport 853 -j DROP
+    if [ "$IPT_MATCH_FORWARD_OUT" != "$IPT_MATCH_FORWARD_IN" ]; then
+      add_rule iptables filter FORWARD "$IPT_MATCH_FORWARD_OUT" "$proto" --dport 853 -j DROP
+    fi
+    add_rule ip6tables filter OUTPUT "$IPT_MATCH_OUTPUT" "$proto" --dport 853 -j DROP
+    add_rule ip6tables filter FORWARD "$IPT_MATCH_FORWARD_IN" "$proto" --dport 853 -j DROP
+    if [ "$IPT_MATCH_FORWARD_OUT" != "$IPT_MATCH_FORWARD_IN" ]; then
+      add_rule ip6tables filter FORWARD "$IPT_MATCH_FORWARD_OUT" "$proto" --dport 853 -j DROP
+    fi
   done
 }
 
