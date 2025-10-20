@@ -1776,7 +1776,7 @@ async function waitForPidChange(oldPid, timeout = 5000) {
                         const moduleProp = await run(`cat ${MODPATH}/module.prop 2>/dev/null || true`);
                         const isRunning = nfqwsStatus === 'Running';
                         isZapretRunning = isRunning;
-                        shouldDnscryptRun = dnscryptStatus === 'Running';
+                        shouldDnscryptRun = isDnscryptChecked && !isIpv6Checked;
                         updateStatusIndicator(statusNfqws, nfqwsStatus);
                         updateStatusIndicator(statusDnscrypt, dnscryptStatus);
                         if (isRunning) {
