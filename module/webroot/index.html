@@ -1465,37 +1465,39 @@ body.light-theme #error-overlay {
                         applyLanguage();
                     }
                 };
-        const DEFAULT_ENABLED_TOGGLE_CONFIGS = new Set([
-            'dnscrypt-cloaking-rules-update',
-            'dnscrypt-blocked-names-update',
-            'dnscrypt-blocked-ips-update'
-        ]);
-        const DEFAULT_LINKS_BY_CONFIG = {
-            'dnscrypt-cloaking-rules-update': 'https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/cloaking-rules.txt',
-            'dnscrypt-blocked-names-update': 'https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/blocked-yandex.txt',
-            'dnscrypt-blocked-ips-update': 'https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/blocked-ips.txt'
-        };
-        let linkTogglePairs = [];
-        const loadingOverlay = document.getElementById('loading-overlay');
-function showLoading() {
-    btnPrimary.disabled = true;
-    loadingOverlay.classList.remove('hidden');
-}
-function hideLoading() {
-    btnPrimary.disabled = false;
-    loadingOverlay.classList.add('hidden');
-}
-async function waitForPidChange(oldPid, timeout = 5000) {
-    const start = Date.now();
-    while (Date.now() - start < timeout) {
-        const status = await run('pgrep -f "nfqws" >/dev/null && echo "Running" || echo "Stopped"');
-        if (oldPid === 'Stopped' ? status.trim() === 'Running' : status.trim() === 'Stopped') {
-            return status;
-        }
-        await new Promise(res => setTimeout(res, 500));
-    }
-    throw new Error('Status did not change');
-}
+                const DEFAULT_ENABLED_TOGGLE_CONFIGS = new Set([
+                    'dnscrypt-cloaking-rules-update',
+                    'dnscrypt-blocked-names-update',
+                    'dnscrypt-blocked-ips-update'
+                ]);
+                const DEFAULT_LINKS_BY_CONFIG = {
+                    'dnscrypt-cloaking-rules-update': 'https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/cloaking-rules.txt',
+                    'dnscrypt-blocked-names-update': 'https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/blocked-yandex.txt',
+                    'dnscrypt-blocked-ips-update': 'https://raw.githubusercontent.com/sevcator/dnscrypt-proxy-stuff/refs/heads/main/blocked-ips.txt'
+                };
+                let linkTogglePairs = [];
+                const loadingOverlay = document.getElementById('loading-overlay');
+                const showLoading = () => {
+                    btnPrimary.disabled = true;
+                    loadingOverlay.classList.remove('hidden');
+                };
+                const hideLoading = () => {
+                    btnPrimary.disabled = false;
+                    loadingOverlay.classList.add('hidden');
+                };
+                const waitForPidChange = async (oldPid, timeout = 5000) => {
+                    const start = Date.now();
+                    while (Date.now() - start < timeout) {
+                        const status = await run('pgrep -f "nfqws" >/dev/null && echo "Running" || echo "Stopped"');
+                        const becameRunning = oldPid === 'Stopped' && status.trim() === 'Running';
+                        const becameStopped = oldPid !== 'Stopped' && status.trim() === 'Stopped';
+                        if (becameRunning || becameStopped) {
+                            return status;
+                        }
+                        await new Promise(res => setTimeout(res, 500));
+                    }
+                    throw new Error('Status did not change');
+                };
                 const statusNfqws = document.getElementById('status-nfqws');
                 const statusDnscrypt = document.getElementById('status-dnscrypt');
                 const btnPrimary = document.getElementById('btn-primary');
