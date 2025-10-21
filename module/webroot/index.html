@@ -1541,7 +1541,7 @@ body.light-theme #error-overlay {
                 const interfaceInput = document.getElementById('input-interface-only');
                 let currentzapretLogText = '';
                 let currentDnscryptLogText = '';
-                linkTogglePairs = [
+                const linkTogglePairs = [
                     { configName: 'dnscrypt-cloaking-rules-update', toggle: toggleCloakingUpdate, input: inputCloakingRules, lastHasLink: false, defaultLink: DEFAULT_LINKS_BY_CONFIG['dnscrypt-cloaking-rules-update'] },
                     { configName: 'dnscrypt-blocked-names-update', toggle: toggleBlockedNamesUpdate, input: inputBlockedNames, lastHasLink: false, defaultLink: DEFAULT_LINKS_BY_CONFIG['dnscrypt-blocked-names-update'] },
                     { configName: 'dnscrypt-forwarding-rules-update', toggle: toggleForwardingRulesUpdate, input: inputForwardingRules, lastHasLink: false },
@@ -1777,6 +1777,8 @@ body.light-theme #error-overlay {
                         currentDnscryptLogText = dnscryptLogs;
                         const moduleProp = await run(`cat ${MODPATH}/module.prop 2>/dev/null || true`);
                         const isRunning = nfqwsStatus === 'Running';
+                        const isDnscryptChecked = dnscryptEnabled === '1';
+                        const isIpv6Checked = ipv6Enable === '1';
                         isZapretRunning = isRunning;
                         shouldDnscryptRun = isDnscryptChecked && !isIpv6Checked;
                         updateStatusIndicator(statusNfqws, nfqwsStatus);
@@ -1800,8 +1802,6 @@ body.light-theme #error-overlay {
                                 strategySelect.appendChild(option);
                             }
                         });
-                        let isDnscryptChecked = dnscryptEnabled === '1';
-                        const isIpv6Checked = ipv6Enable === '1';
                         toggleIpv6.checked = isIpv6Checked;
                         toggleDnscrypt.checked = isDnscryptChecked;
                         toggleRulesRecheck.checked = rulesRecheck === '1';
