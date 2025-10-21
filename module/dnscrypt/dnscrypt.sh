@@ -6,7 +6,10 @@ REFRESH=$(cat "$MODPATH/config/dnscrypt-rules-fix" 2>/dev/null || echo "0")
 setup() {
   INTERFACE_ONLY=$(cat "$MODPATH/config/interface-only" 2>/dev/null || echo "")
   IGNORE_DNSCRYPT=$(cat "$MODPATH/config/interface-ignore-dnscrypt" 2>/dev/null || echo "0")
-  if [ -n "$INTERFACE_ONLY" ] && [ "$IGNORE_DNSCRYPT" != "1" ]; then
+  if [ "$IGNORE_DNSCRYPT" = "1" ]; then
+    return 0
+  fi
+  if [ -n "$INTERFACE_ONLY" ]; then
     IPT_MATCH_PREROUTING="-i $INTERFACE_ONLY"
     IPT_MATCH_OUTPUT="-o $INTERFACE_ONLY"
     IPT_MATCH_FORWARD_IN="-i $INTERFACE_ONLY"
